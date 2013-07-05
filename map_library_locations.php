@@ -1,3 +1,11 @@
+<?php
+require_once("classes/LocationQuery.php");
+require_once("classes/Location.php");
+
+	$locq = new LocationQuery();
+	$locations = $locq->getLocations();
+	echo $locations[0]->getAddressOne();
+?>
 <!DOCTYPE html>
 <html>
   <head>
@@ -10,7 +18,17 @@ body { height: 100%; margin: 0; padding: 0 }
     </script>
     <script type="text/javascript">
       var points = [
-    ['Hyderabad',  17.430375, 78.323078, 12, 'http://www.yousee.in'],
+			<?php 	
+				$points="";
+				foreach($locations as $location) {$points.="['$location->getAddressOne()',$location->getLatitude(),								$location->getLongitude()."],"}
+				$points=substr($points,0,-1);
+				echo $points;
+
+			?>
+		   ];
+
+    var points = [
+    ['Hyderabad', 17.430375, 78.323078, 12, 'http://www.yousee.in'],
     ['Indore', 22.759126, 75.917169, 11, 'https://www.amazon.com'],
     ['Bangalore', 12.842745, 77.663180, 10, 'https://www.stackoverflow.com']
 ];
@@ -43,6 +61,7 @@ function setMarkers(map, locations) {
     }
 }
 function initialize() {
+alert("hi");
     var myOptions = {
     center: new google.maps.LatLng(25.324167, 78.134766),
         zoom: 4,
@@ -56,6 +75,7 @@ function initialize() {
 </script>
   </head>
   <body>
+<?php echo $points;?>
 <div id="map_canvas" style="width:800px; height:500px"></div>
   </body>
 </html>
