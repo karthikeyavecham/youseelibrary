@@ -4,7 +4,6 @@ require_once("classes/City.php");
 
 	$cityq = new CityQuery();
 	$cities = $cityq->getCities();
-	echo $cities[0]->getLatitude()." ".$cities[0]->getLongitude();
 ?>
 <!DOCTYPE html>
 <html>
@@ -35,11 +34,11 @@ body { height: 100%; margin: 0; padding: 0 }
 				$points.=$city->getCityName();
 				$points.="&lat=";
 				$points.=$city->getLatitude();
-				$points.="&long="
+				$points.="&long=";
 				$points.=$city->getLongitude();
 				$points.="',";
 				$points.=$city->getCityid();
-				$points.="'],";
+				$points.="],";
 				}
 				$points=substr($points,0,-1);
 				echo $points;

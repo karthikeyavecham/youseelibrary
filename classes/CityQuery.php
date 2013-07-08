@@ -63,8 +63,7 @@ class CityQuery extends Query {
    */
   function insert($city) {
     $sql = $this->mkSQL("insert into biblio_city (cityid, city_name, create_dt, last_change_dt, last_change_userid, latitude, longitude) "
-                        . "values (null, %Q, sysdate(), sysdate(), %N, %N)",
-                        $city->getCityName(), "1", $city->getLatitude(), $city->getLongitude());
+           . "values (null, %Q, sysdate(), sysdate(), %N, %N)", $city->getCityName(), "1", $city->getLatitude(), $city->getLongitude());
 
     $this->exec($sql);
     $cityid = $this->_conn->getInsertId();
@@ -79,9 +78,8 @@ class CityQuery extends Query {
    ****************************************************************************
    */
   function update($city) {
-    $sql = $this->mkSQL("update biblio_city set last_change_dt = sysdate(), last_change_userid=%N, cityname=%Q, "
-			. " latitude=%Q, longitude=%Q where cityid=%N",
-                        $city->getLastChangeUserid(), $city->getCityName(),$city->getLatitude(), $city->getLongitude(), $city->getCityid());
+    $sql = $this->mkSQL("update biblio_city set last_change_dt = sysdate(), last_change_userid=%N, city_name=%Q, "
+	. " city_latitude=%Q, city_longitude=%Q where cityid=%N", $city->getLastChangeUserid(), $city->getCityName(),$city->getLatitude(), 		$city->getLongitude(), $city->getCityid());
     $this->exec($sql);
   }
 
