@@ -3,7 +3,7 @@
  * See the file COPYRIGHT.html for more details.
 */
 
-require_once("./functions/formatFuncs.php");
+require_once("functions/formatFuncs.php");
 
 /****************************************************************************
  * Location represents a library location.  Contains business rules for
@@ -14,20 +14,13 @@ require_once("./functions/formatFuncs.php");
 * @access public
 ******************************************************************************
 */
-class Location {
-	var $_addr1 = 0;
+class City {
+	var $_cityid = 0;
+	var $_cityname = 0;
 	var $_addr1Error = 0;
-	var $_addr2 = 0;
-	var $_addr2Error = 0;
 	var $_createDt = "";
 	var $_lastChangeDt = "";
-	var $_staffid;
 	var $_lastChangeUserid = "";
-	var $_locationid = "";
-	var $_pincode = "";
-	var $_pincodeError = "";
-	var $_state = "";
-	var $_city = "";
 	var $_latitude="";
 	var $_longitude="";
 
@@ -38,19 +31,10 @@ class Location {
 	*/
 	function validateData() {
 		$valid = true;
-		if ($this->_addr1== "") {
+		if ($this->_city_name== "") {
 			$valid = false;
-			$this->_addr1Error  = "Location Address Line 1 is required.";
+			$this->_addr1Error  = "City name is required.";
 		}
-		if ($this->_addr2 == "") {
-			$valid = false;
-			$this->_addr2Error = "Location Address Line 2 is required.";
-		}
-		if ($this->_pincode == "") {
-			$valid = false;
-			$this->_pincodeError = "Pincode is required.";
-		}
-
 		return $valid;
 	}
 
@@ -61,20 +45,11 @@ class Location {
 	* @access public
 	****************************************************************************
 	*/
-	function getAddressOne() {
-		return $this->_addr1;
+	function getCityid() {
+		return $this->_cityid;
 	}
-	function getAddressTwo() { 
-		return $this->_addr2;
-	}
-	function getAddress1Error() {
-		return $this->__addr1Error;
-	}
-	function getAddress2Error() {
-		return $this->__addr2Error;
-	}
-	function getStaffid(){
-		return $this->_staffid;
+	function getCityName() {
+		return $this->_cityname;
 	}
 	function getCreateDt() {
 		return $this->_createDt;
@@ -84,21 +59,6 @@ class Location {
 	}
 	function getLastChangeUserid() {
 		return $this->_lastChangeUserid;
-	}
-	function getLocationid() {
-		return $this->_locationid;
-	}
-	function getPincode() {
-		return $this->_pincode;
-	}
-	function getPincodeError() {
-		return $this->_pincodeError;
-	}
-	function getState() {
-		return $this->_state;
-	}
-	function getCity() {
-		return $this->_city;
 	}
 	function getLatitude(){
 		return $this->_latitude;
@@ -116,17 +76,11 @@ class Location {
 	* @access public
 	****************************************************************************
 	*/
-	function setAddressOne($value) {
-		$this->_addr1 = trim($value);
+	function setCityid($value) {
+		$this->_cityid = trim($value);
 	}
-	function setAddressOneError($value) {
-		$this->_addr1Error = trim($value);
-	}
-	function setAddressTwo($value) {
-		$this->_addr2 = trim($value);
-	}
-	function setAddressTwoError($value) {
-		$this->_addr2Error = trim($value);
+	function setCityName($value) {
+		$this->_cityname = trim($value);
 	}
 	function setCreateDt($value) {
 		$this->_createDt = trim($value);
@@ -136,24 +90,6 @@ class Location {
 	}
 	function setLastChangeUserid($value) {
 		$this->_lastChangeUserid = trim($value);
-	}
-	function setStaffid($staffid){
-		$this->_staffid = trim($staffid);
-	}
-	function setLocationid($value) {
-		$this->_locationid = trim($value);
-	}
-	function setPincode($value) {
-		$this->_pincode = trim($value);
-	}
-	function setPincodeError($value) {
-		$this->_pincodeError = trim($value);
-	}
-	function setCity($value) {
-		$this->_city = trim($value);
-	}
-	function setState($value) {
-		$this->_state = trim($value);
 	}
 	function setLatitude($value){
 		$this->_latitude = trim($value);

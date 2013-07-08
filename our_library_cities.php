@@ -44,7 +44,7 @@
 <td valign="top">
 <hr>
 <div id="postedComments" >
-<?php include 'map_library_locations.php';?>
+<?php include 'map_library_cities.php';?>
 </div>
 </td>
 </tr>

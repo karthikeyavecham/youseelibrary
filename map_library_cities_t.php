@@ -1,10 +1,9 @@
 <?php
-require_once("classes/LocationQuery.php");
-require_once("classes/Location.php");
-	$city = $_GET['city'];
-	$locq = new LocationQuery();
-	$locations = $locq->getLocationsForCity($city);
-	
+require_once("classes/CityQuery.php");
+require_once("classes/City.php");
+
+	$cityq = new CityQuery();
+	$cities = $cityq->getCities();
 ?>
 <!DOCTYPE html>
 <html>
@@ -17,28 +16,13 @@ body { height: 100%; margin: 0; padding: 0 }
       src="https://maps.googleapis.com/maps/api/js?&sensor=true">
     </script>
     <script type="text/javascript">
-	var points = [
-			<?php 	
-				$points="";
-				foreach($locations as $location) {
-				$points.="['";
-				$points.=$location->getAddressOne();
-				$points.="',";
-				$points.=$location->getLatitude();
-				$points.=",";
-				$points.=$location->getLongitude();
-				$points.=",";
-				$points.="5";
-				$points.=",";
-				$points.="'http://localhost/youseelibrary/books.php?locationid=";
-				$points.=$location->getLocationid();
-				$points.="'],";
-				}
-				$points=substr($points,0,-1);
-				echo $points;
 
-			?>
-		   ];
+var points = [
+    ['Hyderabad', 17.430375, 78.323078, 12, 'http://localhost/youseelibrary/our_library_locations.php?city=Hyderabad&lat=17.386027&long=78.487473'],
+    ['Indore', 22.759126, 75.917169, 11, 'http://localhost/youseelibrary/our_library_locations.php?city=Indore,lat=17.386027,long=78.487473'],
+    ['Bangalore', 12.842745, 77.663180, 10, 'http://localhost/youseelibrary/our_library_locations.php?city=Bangalore&lat=17.386027&long=78.487473']
+];
+ 
 function setMarkers(map, locations) {
     var shape = {
         coord: [1, 1, 1, 20, 18, 20, 18, 1],
@@ -67,23 +51,21 @@ function setMarkers(map, locations) {
     }
 }
 function initialize() {
-var lat=<?php echo $_GET['lat'];?>;
-var long= <?php echo $_GET['long'];?>;
+
     var myOptions = {
-    center: new google.maps.LatLng(lat,long),
-        zoom: 10,
+    center: new google.maps.LatLng(25.324167, 78.134766),
+        zoom: 4,
         mapTypeId: google.maps.MapTypeId.HYBRID
     };
-
-    var map = new google.maps.Map(document.getElementById("map_locations"), myOptions);
+	
+    var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
     setMarkers(map, points);
-
 }
         google.maps.event.addDomListener(window,'load',initialize);
 </script>
   </head>
   <body>
-
-<div id="map_locations" style="width:800px; height:500px"></div>
+<?php echo $points;?>
+<div id="map_canvas" style="width:800px; height:500px"></div>
   </body>
 </html>
