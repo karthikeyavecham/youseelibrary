@@ -1,10 +1,9 @@
 <?php
 require_once("classes/LocationQuery.php");
 require_once("classes/Location.php");
-	$city = $_GET['city'];
+	$city = $_GET['chosencity'];
 	$locq = new LocationQuery();
 	$locations = $locq->getLocationsForCity($city);
-	
 ?>
 <!DOCTYPE html>
 <html>
@@ -30,8 +29,12 @@ body { height: 100%; margin: 0; padding: 0 }
 				$points.=",";
 				$points.="5";
 				$points.=",";
-				$points.="'http://localhost/youseelibrary/books.php?locationid=";
+				$points.="'http://localhost/youseelibrary/our_library_cities.php?locationid=";
 				$points.=$location->getLocationid();
+				$points.="&lat=";
+				$points.=$_GET['lat'];
+				$points.="&long=";
+				$points.=$_GET['long'];
 				$points.="'],";
 				}
 				$points=substr($points,0,-1);
@@ -76,6 +79,7 @@ var long= <?php echo $_GET['long'];?>;
     };
 
     var map = new google.maps.Map(document.getElementById("map_locations"), myOptions);
+    map.setOptions({draggable: false, zoomControl: false, scrollwheel: false, disableDoubleClickZoom: true});
     setMarkers(map, points);
 
 }

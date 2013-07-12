@@ -3,7 +3,6 @@
  * See the file COPYRIGHT.html for more details.
  */
  
-require_once("shared/global_constants.php");
 require_once("classes/Query.php");
 require_once("classes/BiblioCopy.php");
 
@@ -38,24 +37,25 @@ class BiblioCopyQuery extends Query {
    * @access public
    ********************************************************************************
    */
-  function getBooksByCriteria($city=null,$location=null,$title=null,$author=null,$category=null) {
+  function getBooksByCriteria($author=NULL,$title=NULL,$category=NULL,$city=NULL,$location=NULL) {
  
-    $sqlstring  = "select a.title, a.author, d.description, e.description ";
-    $sqlstring .= "from opencitylibrary.biblio a, opencitylibrary.biblio_copy b,opencitylibrary.biblio_location c, ";
-    $sqlstring .= "opencitylibrary.collection_dm d,opencitylibrary.biblio_status_dm e ";
+    $sqlstring  = "select a.title as Title, a.author as Author, d.description as Category, e.description as Status ";
+    $sqlstring .= "from biblio a, biblio_copy b,biblio_location c, ";
+    $sqlstring .= "collection_dm d,biblio_status_dm e ";
     $sqlstring .= "where a.bibid=b.bibid and a.collection_cd = d.code and b.locationid = c.locationid and b.status_cd = e.code";
 
     if ($city != NULL)
- 	$sqlstring .= " and c.loc_city = %Q";
+	$sqlstring .= " and c.loc_city = %Q";
     if ($location != NULL)
- 	$sqlstring .= " and c.loc_address_one = %Q";
+	$sqlstring .= " and c.locationid = %N";
     if ($title != NULL)
- 	$sqlstring .= " and a.title like %Q";
-   if ($author != NULL)
- 	$sqlstring .= " and a.author like %Q";
-   if ($category != NULL)
- 	$sqlstring .= " and d.code = %Q";
-
+	$sqlstring .= " and a.title like %Q";
+    if ($author != NULL)
+	$sqlstring .= " and a.author like %Q";
+    if ($category != NULL)
+	$sqlstring .= " and d.description = %Q";
+ 
+    echo $city. ' '.$location.' '.$title.' '.$author.' '.$category.' ';
     $sql = $this->mkSQL($sqlstring, $city, $location, $title, $author, $category);
     $row = $this->select01($sql);
     if (!$row)
@@ -260,22 +260,22 @@ class BiblioCopyQuery extends Query {
       return false;
     }
     $sql = $this->mkSQL("insert into biblio_copy values (%N"
-                        . ",null, now(), %Q, %Q, %Q, sysdate(), ",
+                        . ",NULL, now(), %Q, %Q, %Q, sysdate(), ",
                         $copy->getBibid(), $copy->getCopyDesc(),
                         $copy->getBarcodeNmbr(), $copy->getStatusCd());
     if ($copy->getDueBackDt() == "") {
-      $sql .= "null, ";
+      $sql .= "NULL, ";
     } else {
       $sql .= $this->mkSQL("%Q, ", $copy->getDueBackDt());
     }
     if ($copy->getMbrid() == "") {
-      $sql .= "null,";
+      $sql .= "NULL,";
     } else {
       $sql .= $this->mkSQL("%Q,", $copy->getMbrid());
     }
 
     if ($copy->getLocationid() == "") {
-    	$sql .= "null,";
+    	$sql .= "NULL,";
     } else {
     	$sql .= $this->mkSQL("%Q,", $copy->getLocationid());
     }
@@ -330,12 +330,12 @@ class BiblioCopyQuery extends Query {
       $sql .= $this->mkSQL("due_back_dt=%Q, ",
                            $copy->getDueBackDt());
     } else {
-      $sql .= "due_back_dt=null, ";
+      $sql .= "due_back_dt=NULL, ";
     }
     if ($copy->getMbrid() != "") {
       $sql .= $this->mkSQL("mbrid=%N ", $copy->getMbrid());
     } else {
-      $sql .= "mbrid=null ";
+      $sql .= "mbrid=NULL ";
     }
     $sql .= $this->mkSQL("where bibid=%N and copyid=%N",
                          $copy->getBibid(), $copy->getCopyid());
@@ -422,7 +422,7 @@ class BiblioCopyQuery extends Query {
   function checkin($massCheckin,$bibids,$copyids) {
     $sql = $this->mkSQL("update biblio_copy set "
                         . " status_cd=%Q, status_begin_dt=sysdate(), "
-                        . " due_back_dt=null, mbrid=null "
+                        . " due_back_dt=NULL, mbrid=NULL "
                         . "where status_cd=%Q ",
                         OBIB_STATUS_IN, OBIB_STATUS_SHELVING_CART);
     if (!$massCheckin) {

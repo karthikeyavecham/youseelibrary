@@ -10,36 +10,10 @@ body { height: 100%; margin: 0; padding: 0 }
     </script>
     <script type="text/javascript">
 
-    var points = [
-			<?php 	
-				$points="";
-				foreach($cities as $city) {
-				$points.="['";
-				$points.=$city->getCityName();
-				$points.="',";
-				$points.=$city->getLatitude();
-				$points.=",";
-				$points.=$city->getLongitude();
-				$points.=",";
-				$points.="5";
-				$points.=",";
-				$points.="'http://localhost/youseelibrary/our_library_cities.php?chosencity=";
-				$points.=$city->getCityName();
-				$points.="&lat=";
-				$points.=$city->getLatitude();
-				$points.="&long=";
-				$points.=$city->getLongitude();
-				$points.="',";
-				$points.=$city->getCityid();
-				$points.="],";
-				}
-				$points=substr($points,0,-1);
-				echo $points;
-
-			?>
-                ];
+     var points = new Array();
  
 function setMarkers(map, cities) {
+	alert("test");
     var shape = {
         coord: [1, 1, 1, 20, 18, 20, 18, 1],
         type: 'poly'
@@ -68,6 +42,9 @@ function setMarkers(map, cities) {
 }
 function initialize() {
 
+
+    var lines = [];
+
     var myOptions = {
     center: new google.maps.LatLng(25.324167, 78.134766),
         zoom: 4,
@@ -76,8 +53,15 @@ function initialize() {
 	
     var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
     map.setOptions({draggable: false, zoomControl: false, scrollwheel: false, disableDoubleClickZoom: true});
-
-     setMarkers(map, points);
+    $.ajax({
+		url : "get_cities_json.php",
+		success : function(returnData){
+		    	lines = returnData.split(";");
+			for (var i=0;i<lines.length;i++) { points[i] = new Array(); points [i] = lines[i].split(","); 	}
+		}
+	});
+	console.log(points[0]);
+    setMarkers(map, points);
 }
         google.maps.event.addDomListener(window,'load',initialize);
 </script>
