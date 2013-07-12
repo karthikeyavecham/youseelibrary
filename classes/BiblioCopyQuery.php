@@ -37,31 +37,21 @@ class BiblioCopyQuery extends Query {
    * @access public
    ********************************************************************************
    */
-  function getBooksByCriteria($author=NULL,$title=NULL,$category=NULL,$city=NULL,$location=NULL) {
+  function getBooksByCriteria($author,$title,$category,$city,$location) {
  
     $sqlstring  = "select a.title as Title, a.author as Author, d.description as Category, e.description as Status ";
     $sqlstring .= "from biblio a, biblio_copy b,biblio_location c, ";
     $sqlstring .= "collection_dm d,biblio_status_dm e ";
     $sqlstring .= "where a.bibid=b.bibid and a.collection_cd = d.code and b.locationid = c.locationid and b.status_cd = e.code";
 
-    if ($city != NULL)
-	$sqlstring .= " and c.loc_city = %Q";
-    if ($location != NULL)
-	$sqlstring .= " and c.locationid = %N";
-    if ($title != NULL)
-	$sqlstring .= " and a.title like %Q";
-    if ($author != NULL)
-	$sqlstring .= " and a.author like %Q";
-    if ($category != NULL)
-	$sqlstring .= " and d.description = %Q";
- 
-    echo $city. ' '.$location.' '.$title.' '.$author.' '.$category.' ';
-    $sql = $this->mkSQL($sqlstring, $city, $location, $title, $author, $category);
-    $row = $this->select01($sql);
-    if (!$row)
-      return NULL;
-    return $this->_mkObj($row);
+    if ( !(empty($city)) && (strlen($city) > 0) ) 
+	$sqlstring .= " and c.loc_city = ". $city;
 
+    echo $sqlstring;
+
+
+    	
+  
   }
 
   /****************************************************************************

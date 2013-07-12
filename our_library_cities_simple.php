@@ -11,10 +11,12 @@ require_once("classes/City.php");
 	$categories = $dmq->getAssoc("collection_dm");
 
 	//this page can be re-entered when a city is chosen from the map. the $chosencity variable gets the city chosen.
+	$chosencity = '';
 	if(isset($_GET['chosencity']) && $_GET['chosencity']!='')
 		$chosencity=$_GET['chosencity'];
 
 	//this page can be re-entered when a location is chosen from the map. the $chosenlocation variable gets the location chosen.
+	$chosenlocationid = '';
 	if(isset($_GET['locationid']) && $_GET['locationid']!='')
 		$chosenlocationid=$_GET['locationid'];
 
@@ -33,10 +35,7 @@ require_once("classes/City.php");
 
 		$citydetails=explode(",",$_POST['city']);
 
-		//initialize these variables
-    		$author='';$title='';$category='';$city='';$location='';
-
-		if ( ($citydetails != "") && ($citydetails[0] != "") ) {
+ 		if ($citydetails != "") {
 			$location=$_POST['location'];
 			$city=$citydetails[0];$_GET['chosencity']=$city;
 			$lat=$citydetails[1];$_GET['lat']=$lat;
@@ -96,51 +95,19 @@ require_once("classes/City.php");
 <hr>
 <?php
 //when a city is clicked upon in the map, display the locations of the city that have a open library
-if  ( !(isset($_POST['Submit'])) &&  isset($_GET['chosencity']) &&  ($_GET['chosencity']  !='')  ) {
+if( isset($_GET['chosencity']) && ( isset($_GET['chosencity']) !='') ) {
 ?>
 <div id="mapLocations" >
 <?php
- echo "1";
-  include 'map_library_locations.php'; 
+include 'map_library_locations.php'; 
 ?>
 </div>
 <?php
-//when a search button is clicked after choosing a location ($location) OR a location is clicked on the map then list all the books in that location
-} else if ( !(isset($_POST['Submit'])) && (  isset($location)  || isset($chosenlocationid)  )  ) {
-?>
-<div id="mapLocationsWithBooks">
-<?php 
- echo "2";
- include 'map_library_locations.php'; 
-?>
-</div>
-<div id="ListingBooks">
-<?php 
-  include 'books.php'; 
-?>
-</div>
-<?php
-//when a search button is clicked  without choosing a location show the cities and the books
-} else if(isset($_POST['Submit']))  {
-?>
-<div id="mapCitiesWithBooks">
-<?php 
-   echo "3";
-   include 'map_library_cities.php'; 
-?>
-</div>
-<div id="ListingBooks">
-<?php
-   include 'books.php'; 
-?>
-</div>
-<?php 
 //when entering the open city library link on the portal all cities have to be displayed
 } else {
 ?>
 <div id="mapCities">
 <?php 
-  echo "4";
   include 'map_library_cities.php'; 
 ?>
 </div>

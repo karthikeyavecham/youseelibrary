@@ -235,6 +235,7 @@ class Query {
       $fmt = substr($fmt, $p+2);
     }
     if ($i != $n) {
+      echo "too many arguements";
       Fatal::internalError('Too many arguments to mkSQL().');
     }
 

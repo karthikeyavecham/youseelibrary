@@ -5,9 +5,9 @@ require_once("classes/BiblioCopy.php");
 	$bcq = new BiblioCopyQuery();
 	if(isset($_GET['locationid']) && $_GET['locationid']!='')	{
 		$locationid=$_GET['locationid'];
+		echo "Location is ".$locationid;
 		$books = $bcq->getBooksByCriteria(NULL,NULL,NULL,NULL,$locationid);
 	} else {
-   		echo $city. ' '.$location.' '.$title.' '.$author.' '.$category.' ';
  		$books = $bcq->getBooksByCriteria($author,$title,$category,$city,$location);
 	}
 	

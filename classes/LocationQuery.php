@@ -43,6 +43,11 @@ class LocationQuery extends Query {
 					 from biblio_location where loc_city = %Q ", $city);
 		return array_map(array($this, '_mkObj'), $this->exec($sql));
 	}
+	function getLocationsInTheSameCityAs($locationid){
+		$sql = $this->mkSQL("select locationid, loc_address_one, loc_address_two, loc_latitude, loc_longitude 
+					 from biblio_location where loc_city = (select loc_city from biblio_location where locationid = %N) ", $locationid);
+		return array_map(array($this, '_mkObj'), $this->exec($sql));
+	}
   /****************************************************************************
    * Executes a query
    * @param string $type one of the global constants

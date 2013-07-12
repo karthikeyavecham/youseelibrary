@@ -1,9 +1,17 @@
 <?php
 require_once("classes/LocationQuery.php");
 require_once("classes/Location.php");
-	$city = $_GET['chosencity'];
+
 	$locq = new LocationQuery();
-	$locations = $locq->getLocationsForCity($city);
+	//if a city is clicked its locations are shown
+	if ( isset($_GET['chosencity']) && ($_GET['chosencity'] != '') )	{
+		$city = $_GET['chosencity'];
+		$locations = $locq->getLocationsForCity($city);
+	//if a location is clicked this map is refreshed
+	} else {
+ 		$locations = $locq->getLocationsInTheSameCityAs($chosenlocationid);
+	}
+
 ?>
 <!DOCTYPE html>
 <html>
