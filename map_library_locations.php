@@ -3,8 +3,18 @@ require_once("classes/LocationQuery.php");
 require_once("classes/Location.php");
 
 	$locq = new LocationQuery();
-	$locations = $locq->getLocations();
-	echo $locations[0]->getAddressOne();
+	//if a city is clicked its locations are shown
+	if ( isset($_GET['chosencity']) && ($_GET['chosencity'] != '') && ($_GET['chosencity'] != ' '))	{
+		$city = $_GET['chosencity'];
+		$locations = $locq->getLocationsForCity($city);
+	//if a location is clicked this map is refreshed
+	} else if (isset($chosenlocationid) && ($chosenlocationid != '') && ($chosenlocationid != ' ')){
+		$locations = $locq->getLocationsInTheSameCityAs($chosenlocationid);
+	//if a location is chosen from the search bar
+	} else {
+		$locations = $locq->getLocationsInTheSameCityAs($searchlocation);
+	}
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -17,22 +27,32 @@ body { height: 100%; margin: 0; padding: 0 }
       src="https://maps.googleapis.com/maps/api/js?&sensor=true">
     </script>
     <script type="text/javascript">
-      var points = [
+	var points = [
 			<?php 	
 				$points="";
-				foreach($locations as $location) {$points.="['$location->getAddressOne()',$location->getLatitude(),								$location->getLongitude()."],"}
+				foreach($locations as $location) {
+				$points.="['";
+				$points.=$location->getAddressOne();
+				$points.="',";
+				$points.=$location->getLatitude();
+				$points.=",";
+				$points.=$location->getLongitude();
+				$points.=",";
+				$points.="5";
+				$points.=",";
+				$points.="'http://localhost/youseelibrary/our_library_cities.php?locationid=";
+				$points.=$location->getLocationid();
+				$points.="&lat=";
+				$points.=$_GET['lat'];
+				$points.="&long=";
+				$points.=$_GET['long'];
+				$points.="'],";
+				}
 				$points=substr($points,0,-1);
 				echo $points;
 
 			?>
 		   ];
-
-    var points = [
-    ['Hyderabad', 17.430375, 78.323078, 12, 'http://www.yousee.in'],
-    ['Indore', 22.759126, 75.917169, 11, 'https://www.amazon.com'],
-    ['Bangalore', 12.842745, 77.663180, 10, 'https://www.stackoverflow.com']
-];
-
 function setMarkers(map, locations) {
     var shape = {
         coord: [1, 1, 1, 20, 18, 20, 18, 1],
@@ -61,21 +81,24 @@ function setMarkers(map, locations) {
     }
 }
 function initialize() {
-alert("hi");
+var lat=<?php echo $_GET['lat'];?>;
+var long= <?php echo $_GET['long'];?>;
     var myOptions = {
-    center: new google.maps.LatLng(25.324167, 78.134766),
-        zoom: 4,
+    center: new google.maps.LatLng(lat,long),
+        zoom: 10,
         mapTypeId: google.maps.MapTypeId.HYBRID
     };
-	
-    var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+    var map = new google.maps.Map(document.getElementById("map_locations"), myOptions);
+    map.setOptions({draggable: false, zoomControl: false, scrollwheel: false, disableDoubleClickZoom: true});
     setMarkers(map, points);
+
 }
         google.maps.event.addDomListener(window,'load',initialize);
 </script>
   </head>
   <body>
-<?php echo $points;?>
-<div id="map_canvas" style="width:800px; height:500px"></div>
+
+<div id="map_locations" style="width:800px; height:500px"></div>
   </body>
 </html>

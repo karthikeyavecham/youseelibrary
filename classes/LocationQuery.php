@@ -10,7 +10,7 @@ require_once("classes/Query.php");
 /******************************************************************************
  * MemberQuery data access component for library members
  *
- * @author David Stevens <dave@stevens.name>;
+ * @author Ganesh Margabandhu <dave@stevens.name>;
  * @version 1.0
  * @access public
  ******************************************************************************
@@ -38,8 +38,14 @@ class LocationQuery extends Query {
   /* * Used to select the distinct locations from the database
    * *
    * */
-	function getLocations(){
-		$sql = $this->mkSQL(	"select locationid, loc_address_one, loc_address_two, loc_latitude, loc_longitude, loc_city from 						biblio_location ");
+	function getLocationsForCity($city){
+		$sql = $this->mkSQL("select locationid, loc_address_one, loc_address_two, loc_latitude, loc_longitude 
+					 from biblio_location where loc_city = %Q ", $city);
+		return array_map(array($this, '_mkObj'), $this->exec($sql));
+	}
+	function getLocationsInTheSameCityAs($locationid){
+		$sql = $this->mkSQL("select locationid, loc_address_one, loc_address_two, loc_latitude, loc_longitude 
+					 from biblio_location where loc_city = (select loc_city from biblio_location where locationid = %N) ", $locationid);
 		return array_map(array($this, '_mkObj'), $this->exec($sql));
 	}
   /****************************************************************************

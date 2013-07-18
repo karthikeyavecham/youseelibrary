@@ -1,3 +1,53 @@
+<?php
+require_once("shared/global_constants.php");
+require_once("classes/DmQuery.php");
+require_once("classes/CityQuery.php");
+require_once("classes/City.php");
+
+	$cityq = new CityQuery();
+	$cities = $cityq->getCities();
+
+	$dmq = new DmQuery();
+	$categories = $dmq->getAssoc("collection_dm");
+
+	//this page can be re-entered when a city is chosen from the map. the $chosencity variable gets the city chosen.
+	$chosencity = '';
+	if(isset($_GET['chosencity']) && $_GET['chosencity']!='')
+		$chosencity=$_GET['chosencity'];
+
+	//this page can be re-entered when a location is chosen from the map. the $chosenlocation variable gets the location chosen.
+	$chosenlocationid = '';
+	if(isset($_GET['locationid']) && $_GET['locationid']!='')
+		$chosenlocationid=$_GET['locationid'];
+
+	if(isset($_POST['Submit']))
+	{
+ 		$search_type=$_POST['search_type'];
+
+		if ($search_type == "author")	
+			{$author=$_POST['author'];}
+
+		if ($search_type == "title")
+			{$title=$_POST['title'];}
+
+		if ($search_type == "category")
+			{$category=$_POST['category'];}
+
+		$citydetails=explode(",",$_POST['city']);
+
+ 		if ($citydetails != "") {
+			$location=$_POST['location'];
+			$city=$citydetails[0];$_GET['chosencity']=$city;
+			$lat=$citydetails[1];$_GET['lat']=$lat;
+			$long=$citydetails[2];$_GET['long']=$long;
+		}
+
+ 
+	}
+
+	
+	
+?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 <HTML>
@@ -18,8 +68,8 @@
 <script src="scripts/datepicker_ngo.js"></script>
 <script type="text/javascript" src="scripts/custom_jquery.js"></script>
 <link rel="stylesheet" href="css/slideshow.css">
-  </HEAD>
- <BODY>
+</HEAD>
+<BODY>
 
 <!--wrapper begin-->
 <div id="wrapper">
@@ -43,9 +93,27 @@
 </td>
 <td valign="top">
 <hr>
-<div id="postedComments" >
-<?php include 'map_library_locations.php';?>
+<?php
+//when a city is clicked upon in the map, display the locations of the city that have a open library
+if( isset($_GET['chosencity']) && ( isset($_GET['chosencity']) !='') ) {
+?>
+<div id="mapLocations" >
+<?php
+include 'map_library_locations.php'; 
+?>
 </div>
+<?php
+//when entering the open city library link on the portal all cities have to be displayed
+} else {
+?>
+<div id="mapCities">
+<?php 
+  include 'map_library_cities.php'; 
+?>
+</div>
+<?php 
+}
+?> 
 </td>
 </tr>
 </table>
@@ -58,6 +126,6 @@
 </div>
 <!--wrapper end-->
 
- </BODY>
+</BODY>
 </HTML>
 

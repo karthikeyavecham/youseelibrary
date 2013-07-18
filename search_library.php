@@ -1,7 +1,7 @@
 <html>
 <head>
 <script type="text/javascript">
-function displayDiv() {
+function displayCategoryDiv() {
     var selectBox = document.getElementById("search_type");
     var selectedValue = selectBox.options[selectBox.selectedIndex].value;
 			if(selectedValue=='author')
@@ -13,73 +13,73 @@ function displayDiv() {
 			if(selectedValue=='category')
 			{document.getElementById("category_div").style.display="block";}
 			else {document.getElementById("category_div").style.display="none";}
+}
+function displayLocationDiv() {
+    var selectcity = document.getElementById("city");
+    var selectedCityValue = selectcity.options[selectcity.selectedIndex].value;
+    var selectedCityName = selectcity.options[selectcity.selectedIndex].text;
+ 			if(selectedCityValue !='')	{  
+				document.getElementById("location_div").style.display="block";
+				$('#location_div').load('get_locations.php?city=' + selectedCityName);
+			} else 
+				{document.getElementById("location_div").style.display="none"; }
+
+
    }
 </script>
 </head>
 <body>
-<form method="post" name="search_library" action="search_library_action.php">
+<form method="post" name="search_library" action="our_library_cities.php" >
 <div id="search_contents">
 	<div id="search_by">
 		<p><b>Search By:</b></p>
-		<select name="search_type" id="search_type" style="width:140px;" onchange="displayDiv();">
+		<select name="search_type" id="search_type" style="width:140px;" onchange="displayCategoryDiv();">
 			<option value='' select="selected">--ALL--</option>
-			<option id="author" value='author' >Author</option>
-			<option id="title" value='title'>Title</option>
-			<option id="category" value='category'>Category</option>
+			<option id="author" name='opt_author' value='author' >Author</option>
+			<option id="category" name='opt_category' value='category'>Category</option>
+			<option id="title"  name='opt_author' value='title'>Title</option>
 		</select>
 	</div>
 	<div id="author_div" style="display:none">
 		<p><b>Author:</b></p>
-			<input type="text" name="author_name" style="width:138px;">
+			<input type="text" name="author" style="width:138px;">
 	</div>
 	<div id="title_div" style="display:none">
 		<p><b>Title:</b></p>
-			<input type="text" name="title_name" style="width:138px;">
+			<input type="text" name="title" style="width:138px;">
 	</div>
 	<div id="category_div" style="display:none">
-		<p><b>Category:</b></p>
-		<select name="category" style="width:140px;">
+		<p><b><font color="red">Choose Category</font></b></p>
+		<select name="category" id="category" style="width:140px;" >
 			<option value='' select="selected">--ALL--</option>
 			<?php
-				include 'database_constants.php';
-				mysql_connect("$dbhost","$dbuser","$dbpass");
-				mysql_select_db("$dbdatabase");
-				$sql=mysql_query("select * from collection_dm");
-				while($row=mysql_fetch_array($sql))
+				foreach($categories as $code=>$description)
 				{
-					$id=$row['code'];
-					$data=$row['description'];
+					echo $code." ".$description;
+					$id=$code;
+					$data=$description;
 					echo '<option value="'.$id.'" name="'.$data.'">'.$data.'</option>';
 				}
 			?>
 		</select>
 	</div>
-	<div id="city">
-		<p><b>City:</b></p>
-		<select name="city" style="width:140px;">
-			<option value='' select="selected">--ALL--</option>
-			<?php
-				$city=array('Banglore','Bhopal','Hyderabad','Indore','Kolkata','Mumbai');
-				for($i = 0, $size = count($city); $i < $size; $i++)
-				{
-					echo "<option value=\"".$city[$i]."\" title=\"".$city[$i]."\">".$city[$i]."</option>";
-				}
-			?>
-		</select>
+	<div id="city_div"> 
+		<p><b><font>City </font></b></p>
+				<select id="city" name="city" style="width:140px;" onchange="displayLocationDiv();">
+					<option value='' select="selected">--ALL--</option>
+		<?php
+		foreach ($cities as $c) { 
+		echo '<option value="'.$c->getCityName().','.$c->getLatitude().','.$c->getLongitude().'" name="'.$c->getCityName().'">'.$c->getCityName().'</option>';
+				    }
+		?>
+				</select>
+
+
 	</div>
-	<div id="location">
-		<p><b>Location:</b></p>
-		<select name="location" style="width:140px;">
-			<option value='' select="selected">--ALL--</option>
-			<option value='hyderabad'>Hyderabad</option>
-			<option value='bangalore'>Bangalore</option>
-			<option value='delhi'>Delhi</option>
-			<option value='mumbai'>Mumbai</option>
-			<option value='etc'>Etc.,</option>
-		</select>
+	<div id="location_div"  style="display:none">
 	</div>
 	</br></br>
-	<input type="submit" value="Submit">
+	<input type="submit" name="Submit" value="Submit">
 </div>
 </form>
 </body>
