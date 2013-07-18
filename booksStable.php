@@ -1,9 +1,7 @@
 <?php
 require_once("classes/BiblioCopyQuery.php");
 require_once("classes/BiblioCopy.php");
-require_once "Paginated.php";
-require_once "DoubleBarLayout.php";
-
+	
 	$bcq = new BiblioCopyQuery();
 	echo "Author is :".$author;
 	
@@ -26,23 +24,17 @@ body { height: 100%; margin: 0; padding: 0 }
 <body>
 <div id="bookListing" style="width:800px; height:500px">
 <br />
-<?php
-$pagedResults = new Paginated($bcq, 10, 1);
-echo "<ul>";
-//echo "<th>".Category</th><th>Title</th><th>Author</th><th>City</th><th>Location</th><th>Status</th>
-
-while($row = $pagedResults->fetchPagedRow()) {
-  echo "<li>".$row["Category"]."\t".$row["Title"]."\t".$row["Author"]."\t".$row["City"]."\t".$row["Location"]."\t".$row["Status"]."</li>";
-}
- 
-echo "</ul>";
- 
-$pagedResults->setLayout(new DoubleBarLayout());
-echo $pagedResults->fetchPagedNavigation();
-?>
-
+<table id="table-search">
+<tr style="background:#ccc">
+<th>Category</th><th>Title</th><th>Author</th><th>City</th><th>Location</th><th>Status</th>
+</tr>
+<?php while ($book = $bcq->_conn->fetchRow()) { ?>
+<tr>
+<td><?php echo $book["Category"] ?><td><?php echo $book["Title"] ?></td><td><?php echo $book["Author"] ?></td><td><?php echo $book["City"] ?>
+</td><td><?php echo $book["Location"] ?></td><td><?php echo $book["Status"] ?></td>
+</tr>
+<?php } ?>
+</table>
 </div>
 </body>
 </html>
-
-

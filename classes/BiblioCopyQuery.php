@@ -60,7 +60,6 @@ class BiblioCopyQuery extends Query {
 
     if ( !(empty($location)) && (strlen($location) > 0) ) 
 	$sqlstring .= " and c.locationid = ". $location;
-
      if (!$this->_query($sqlstring, $this->_loc->getText("biblioCopyQueryErr4"))) {
  	return false;
     }
