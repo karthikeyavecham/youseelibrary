@@ -3,7 +3,6 @@ require_once("classes/BiblioCopyQuery.php");
 require_once("classes/BiblioCopy.php");
 	
 	$bcq = new BiblioCopyQuery();
-	echo "Author is :".$author;
 	
 	if(isset($_GET['locationid']) && $_GET['locationid']!='')	{
 		$locationid=$_GET['locationid'];
