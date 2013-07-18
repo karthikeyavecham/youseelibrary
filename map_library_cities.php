@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
+<link rel="stylesheet" type="text/css" href="css/main.css">
+<link rel="stylesheet" type="text/css" href="css/div.css">
     <style type="text/css">
 html { height: 100% }
 body { height: 100%; margin: 0; padding: 0 }

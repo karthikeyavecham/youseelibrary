@@ -3,12 +3,12 @@ require_once("classes/BiblioCopyQuery.php");
 require_once("classes/BiblioCopy.php");
 	
 	$bcq = new BiblioCopyQuery();
+
 	if(isset($_GET['locationid']) && $_GET['locationid']!='')	{
 		$locationid=$_GET['locationid'];
-		echo "Location is ".$locationid;
-		$books = $bcq->getBooksByCriteria(NULL,NULL,NULL,NULL,$locationid);
+		$bcq->getBooksByCriteria(NULL,NULL,NULL,NULL,$locationid);
 	} else {
- 		$books = $bcq->getBooksByCriteria($author,$title,$category,$city,$location);
+ 		$bcq->getBooksByCriteria($author,$title,$category,$city,$searchlocation);
 	}
 	
 ?>
@@ -22,13 +22,15 @@ body { height: 100%; margin: 0; padding: 0 }
 </head>
 <body>
 <div id="bookListing" style="width:800px; height:500px">
-<table>
-<tr>
-<td>Title</td><td>Author</td><td>Status</td>
+<br />
+<table id="table-search">
+<tr style="background:#ccc">
+<th>Category</th><th>Title</th><th>Author</th><th>City</th><th>Location</th><th>Status</th>
 </tr>
-<?php foreach ($books as $book) { ?>
+<?php while ($book = $bcq->_conn->fetchRow()) { ?>
 <tr>
-<td><?php echo $book["Category"] ?><td><?php echo $book["Title"] ?></td><td><?php echo $book["Author"] ?></td><td><?php echo $book["Status"] ?></td>
+<td><?php echo $book["Category"] ?><td><?php echo $book["Title"] ?></td><td><?php echo $book["Author"] ?></td><td><?php echo $book["City"] ?>
+</td><td><?php echo $book["Location"] ?></td><td><?php echo $book["Status"] ?></td>
 </tr>
 <?php } ?>
 </table>

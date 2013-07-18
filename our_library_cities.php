@@ -34,11 +34,11 @@ require_once("classes/City.php");
 		$citydetails=explode(",",$_POST['city']);
 
 		//initialize these variables
-    		$author='';$title='';$category='';$city='';$location='';
+    		$author='';$title='';$category='';$city='';$searchlocation='';
 
 		if ( ($citydetails != "") && ($citydetails[0] != "") ) {
-			$location=$_POST['location'];
-			$city=$citydetails[0];$_GET['chosencity']=$city;
+			$searchlocation=$_POST['location'];
+			$city=$citydetails[0];
 			$lat=$citydetails[1];$_GET['lat']=$lat;
 			$long=$citydetails[2];$_GET['long']=$long;
 		}
@@ -106,15 +106,15 @@ if  ( !(isset($_POST['Submit'])) &&  isset($_GET['chosencity']) &&  ($_GET['chos
 </div>
 <?php
 //when a search button is clicked after choosing a location ($location) OR a location is clicked on the map then list all the books in that location
-} else if ( !(isset($_POST['Submit'])) && (  isset($location)  || isset($chosenlocationid)  )  ) {
+} else if ( (isset($_POST['Submit'])) && ( ( isset($searchlocation) && ($searchlocation !='') ) ||  ( isset($chosenlocationid) && ($chosenlocationid !='') ) )  ) {
 ?>
 <div id="mapLocationsWithBooks">
 <?php 
- echo "2";
+ echo "2 ";
  include 'map_library_locations.php'; 
 ?>
 </div>
-<div id="ListingBooks">
+<div id="ListingBooksForSearch">
 <?php 
   include 'books.php'; 
 ?>
@@ -129,7 +129,7 @@ if  ( !(isset($_POST['Submit'])) &&  isset($_GET['chosencity']) &&  ($_GET['chos
    include 'map_library_cities.php'; 
 ?>
 </div>
-<div id="ListingBooks">
+<div id="ListingBooksForClick">
 <?php
    include 'books.php'; 
 ?>
@@ -151,7 +151,6 @@ if  ( !(isset($_POST['Submit'])) &&  isset($_GET['chosencity']) &&  ($_GET['chos
 </tr>
 </table>
 <!--maincontentarea end-->
-</div>
 
 <!--footer-->
 <?php include 'footer.php' ;?>
