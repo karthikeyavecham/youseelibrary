@@ -10,59 +10,113 @@ $cities = $cityq->getCities();
 $dmq = new DmQuery();
 $categories = $dmq->getAssoc("collection_dm");
 
-//this page can be re-entered when a city is chosen from the map. the $chosencity variable gets the city chosen.
-if(isset($_GET['chosencity']) && $_GET['chosencity']!='')
-	$chosencity=$_GET['chosencity'];
-//this page can be re-entered when a location is chosen from the map. the $chosenlocation variable gets the location chosen.
-if(isset($_GET['locationid']) && $_GET['locationid']!='')
-	$chosenlocationid=$_GET['locationid'];
 
-if(isset($_POST['Submit']))
-{
+//initialize these variables
+$chosencity='';  $searchlocation=''; $author=''; $title=''; $category='';
+
+if (isset($_GET['page']) && $_GET['page']!='')	{
+
+	$condition = $_GET['condition'];
+
+	if ($condition==1)	{
+		$chosencity=$_GET['chosencity'];
+
+	} else if ($condition==2)	{
+
+		$search_type=$_GET['search_type'];
+
+		if ($search_type == "author")
+			$author=$_GET['author'];
+		if ($search_type == "title")
+			$title=$_GET['title'];
+		if ($search_type == "category")
+			$category=$_GET['category'];
+		
+		$citydetails=explode(",",$_GET['city']);
+		$chosencity=$citydetails[0];
+		$lat=$citydetails[1];$_GET['lat']=$lat;
+		$long=$citydetails[2];$_GET['long']=$long;
+		$chosenlocationid=$_GET['location'];
+
+	} else if ($condition==3)	{
+		
+		$search_type=$_GET['search_type'];
+		
+		if ($search_type == "author")
+			$author=$_GET['author'];
+		if ($search_type == "title")
+			$title=$_GET['title'];
+		if ($search_type == "category")
+			$category=$_GET['category'];
+		
+		$citydetails=explode(",",$_GET['city']);
+		$chosencity=$citydetails[0];
+		$lat=$citydetails[1];$_GET['lat']=$lat;
+		$long=$citydetails[2];$_GET['long']=$long;
+
+	} else if ($condition==4)	{
+
+		$chosenlocationid=$_GET['locationid'];
+		$chosencity=$cityq->getCityOfLocation($chosenlocationid);
+		
+	} else if ($condition == 5)	{
+		
+		$search_type=$_GET['search_type'];
+		
+		if ($search_type == "author")
+			$author=$_GET['author'];
+		if ($search_type == "title")
+			$title=$_GET['title'];
+		if ($search_type == "category")
+			$category=$_GET['category'];		
+		
+	}
+
+} else  if ( (isset($_POST['Submit'])) ) {
 	$search_type=$_POST['search_type'];
 
 	if ($search_type == "author")
-	{
 		$author=$_POST['author'];
-	}
-	else
-	{
-		$author='';
-	}
-
 	if ($search_type == "title")
-	{
 		$title=$_POST['title'];
-	}
-	else
-	{
-		$title='';
-	}
-
 	if ($search_type == "category")
-	{
 		$category=$_POST['category'];
-	}
-	else
-	{
-		$category='';
-	}
 
 	$citydetails=explode(",",$_POST['city']);
 
-	//initialize these variables
-	$city='';  $searchlocation='';
 
 	if ( ($citydetails != "") && ($citydetails[0] != "") ) {
-		$searchlocation=$_POST['location'];
-		$city=$citydetails[0];
+
+		if ( isset($_POST['location']) && ($_POST['location']!='') )	{
+			$chosenlocationid=$_POST['location'];
+			$condition=2;
+		}
+
+		$condition=3;
+		$chosencity=$citydetails[0];
 		$lat=$citydetails[1];$_GET['lat']=$lat;
 		$long=$citydetails[2];$_GET['long']=$long;
+
+	} else {
+		$condition=5;
 	}
 
 
 }
+//this page can be re-entered when a city is chosen from the map. the $chosencity variable gets the city chosen.
+else if(isset($_GET['chosencity']) && $_GET['chosencity']!='')	{
+	$chosencity=$_GET['chosencity'];
+	$condition=1;
+}
 
+//this page can be re-entered when a location is chosen from the map. the $chosenlocation variable gets the location chosen.
+else if(isset($_GET['locationid']) && $_GET['locationid']!='')	{
+	$chosenlocationid=$_GET['locationid'];
+	$chosencity=$cityq->getCityOfLocation($chosenlocationid);
+	$condition=4;
+
+}else
+	$condition=5;
 
 
 ?>
@@ -113,77 +167,41 @@ if(isset($_POST['Submit']))
 					<td valign="top">
 						<hr> <?php
 						//when a city is clicked upon in the map, display the locations of the city that have a open library
-						if  ( !(isset($_POST['Submit'])) &&  isset($_GET['chosencity']) &&  ($_GET['chosencity']  !='')  ) {
+						if  ( $condition==1 || $condition==2 || $condition==3 || $condition==4) {
 ?>
 						<div id="mapLocations">
 							<?php
-							echo "1";
+							echo $condition;
 							include 'map_library_locations.php';
 							?>
-						</div> <?php
-						//when a search button is clicked after choosing a location ($location) OR a location is clicked on the map then list all the books in that location
-} else if ( (isset($_POST['Submit'])) && ( ( isset($searchlocation) && ($searchlocation !='') ) )||  ( isset($chosenlocationid) && ($chosenlocationid !='') ) )  {
-?>
-						<div id="mapLocationsWithBooks">
-							<?php 
-							echo "2 ";
-							include 'map_library_locations.php';
-							?>
-						</div>
-						<div id="ListingBooksForSearch">
-							<?php 
-							include 'books.php';
-							?>
-						</div> <?php
-						//when a search button is clicked  without choosing a location but choosing a city then display the locations in the city and the books in that city
-} else if ( (isset($_POST['Submit'])) &&  isset($_POST['city']) &&  ($_POST['city']  !='')  ) {
-?>
-						<div id="mapLocationsWithBooksFromSearch">
-							<?php 
-							echo "3";
-							include 'map_library_locations.php';
-							?>
-						</div>
-						<div id="ListingBooksForClick">
-							<?php
-							include 'books.php';
-							?>
-						</div> <?php
-						//when a search button is clicked  without choosing a location show the cities and the books
-} else if (isset($_POST['Submit']))  {
+						</div> <?php 
+} else  {
 ?>
 						<div id="mapCitiesWithBooks">
 							<?php 
-							echo "4";
+							echo $condition;
 							include 'map_library_cities.php';
 							?>
-						</div>
+						</div> <?php 
+}
+?>
 						<div id="ListingBooksForClick">
 							<?php
 							include 'books.php';
 							?>
-						</div> <?php 
-						//when entering the open city library link on the portal all cities have to be displayed
-} else {
-?>
-						<div id="mapCities">
-							<?php 
-  echo "5";
-  include 'map_library_cities.php'; 
-?>
-						</div> <?php 
-}
-?>
+						</div>
 					</td>
 				</tr>
 			</table>
 			<!--maincontentarea end-->
 
 			<!--footer-->
-			<?php include 'footer.php' ;?>
+			<?php  include 'footer.php' ;?>
 
 		</div>
-		<!--wrapper end-->
+		<!--UC Certificate end-->
+	</div>
+	<!--wrapper end-->
 
 </BODY>
 </HTML>

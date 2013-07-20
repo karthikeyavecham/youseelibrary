@@ -4,19 +4,11 @@ require_once("classes/Location.php");
 
 	$locq = new LocationQuery();
 	//if a city is clicked on the map its locations are shown
-	if ( isset($_GET['chosencity']) && ($_GET['chosencity'] != '') && ($_GET['chosencity'] != ' '))	{
-		$city = $_GET['chosencity'];
-		$locations = $locq->getLocationsForCity($city);
 	//if a location is clicked this map it is refreshed
-	} else if (isset($chosenlocationid) && ($chosenlocationid != '') && ($chosenlocationid != ' ')){
-		$locations = $locq->getLocationsInTheSameCityAs($chosenlocationid);
-	//if a city is chosen from the search bar and submit is pressed
-	} else if (isset($_POST['city']) && ($_POST['city'] != '') && ($_POST['city'] != ' ')){
-		$locations = $locq->getLocationsForCity($city);
 	//if a location is chosen from the search bar and submit is pressed
-	} else {
-		$locations = $locq->getLocationsInTheSameCityAs($searchlocation);
-	}
+	if ( isset($chosencity) && ($chosencity!= '') && ($chosencity!= ' '))	{
+		$locations = $locq->getLocationsForCity($chosencity);
+	} 
 
 ?>
 <!DOCTYPE html>
