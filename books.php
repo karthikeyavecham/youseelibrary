@@ -66,7 +66,7 @@ body {
 			}
 			else {
 ?>
-		
+
 		<table id="table-search">
 			<tr style="background: #ccc">
 				<th>Category</th>
