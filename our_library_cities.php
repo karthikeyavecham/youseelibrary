@@ -169,17 +169,26 @@ else if(isset($_GET['locationid']) && $_GET['locationid']!='')	{
 						//when a city is clicked upon in the map, display the locations of the city that have a open library
 						if  ( $condition==1 || $condition==2 || $condition==3 || $condition==4) {
 ?>
-						<div id="mapLocations">
+						<div id="mapCitiesWithBooks"  >
+							<?php 
+							include 'display_search_conditions.php';
+							?>
+						</div>  
+						<div id="mapLocations"   >
 							<?php
-							echo $condition;
 							include 'map_library_locations.php';
 							?>
 						</div> <?php 
 } else  {
 ?>
-						<div id="mapCitiesWithBooks">
+		
+						<div id="mapCitiesWithBooks"  >
 							<?php 
-							echo $condition;
+							include 'display_search_conditions.php';
+							?>
+						</div>  
+						<div id="mapCitiesWithBooks"  >
+							<?php 
 							include 'map_library_cities.php';
 							?>
 						</div> <?php 
