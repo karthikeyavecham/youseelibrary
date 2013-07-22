@@ -43,6 +43,12 @@ class CityQuery extends Query {
 		return array_map(array($this, '_mkObj'), $this->exec($sql));
 	}
   
+	function getCityOfLocation($chosenlocationid)
+	{
+		$sql = $this->mkSQL("select loc_city as city from biblio_location where locationid= %Q",$chosenlocationid);
+		$result= $this->exec($sql);
+		return $result[0]['city'];
+	}
   function _mkObj($array) {
     $city = new City();
     $city->setCityid($array["cityid"]);

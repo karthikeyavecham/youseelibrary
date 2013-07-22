@@ -55,10 +55,9 @@ function displayLocationDiv() {
 			<?php
 				foreach($categories as $code=>$description)
 				{
-					echo $code." ".$description;
 					$id=$code;
 					$data=$description;
-					echo '<option value="'.$id.'" name="'.$data.'">'.$data.'</option>';
+					echo '<option value="'.$data.'" name="'.$data.'">'.$data.'</option>';
 				}
 			?>
 		</select>
