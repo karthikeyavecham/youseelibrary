@@ -30,13 +30,17 @@ $bcq = new BiblioCopyQuery();
 * show the cities and the books
 *
 */
-
-$books=$bcq->getBooksByCriteria($author,$title,$category,$chosencity,$chosenlocationid);
-$_GET['author']=$author;
-$_GET['title']=$title;
-$_GET['search_type']=$search_type;
-$_GET['category']=$category;
-$_GET['city']=$chosencity;
+if(isset($_GET['page'])&&($_GET['page']!=''))
+{
+	$page=$_GET['page'];
+	$lastcount = ($page-1)*10;
+	$count=$_GET['numberofrecords'];
+} else {
+	$page=1;
+	$lastcount=0;
+	$count = $bcq->getCountOfBooksByCriteria($author, $title, $category, $chosencity, $chosenlocationid);
+}
+$books=$bcq->getBooksByCriteria($author,$title,$category,$chosencity,$chosenlocationid,$lastcount);
 
 
 ?>
@@ -56,18 +60,18 @@ body {
 </style>
 </head>
 <body>
-	<div id="bookListing" style="width: 800px; height: 500px">
+	<div id="bookListing" style="width:800px; height: 500px">
 		<br />
 		<?php 
 			if($books==null)
 			{
-				echo "<br></br><br></br><font style='color:red;font-weight:bold;font-size:16px;text-align:center;padding:20px' >No Books Found For The Given Search Criteria</font>\n";
+				echo "<br></br><br></br><font style='color:red;font-weight:bold;font-size:16px;text-align:center;padding:20px' >No Books Found </font>\n";
 				
 			}
 			else {
 ?>
 
-		<table id="table-search">
+		<table id="table-search" width="100%">
 			<tr style="background: #ccc">
 				<th>Category</th>
 				<th>Title</th>
@@ -77,12 +81,8 @@ body {
 				<th>Status</th>
 			</tr>
 			<?php
-			if(isset($_GET['page']))
-				$page = $_GET['page'];
-			else
-				$page=1;
-			$pagedResults = new Paginated($books, 5, $page);
-while($book = $pagedResults->fetchPagedRow()) { ?>
+			$pagedResults = new Paginated($books,$count,10, $page);
+			while($book = $pagedResults->fetchPagedRow()) { ?>
 			<tr>
 				<td><?php echo $book["Category"] ?>
 				
@@ -105,38 +105,42 @@ while($book = $pagedResults->fetchPagedRow()) { ?>
 						$queryVars .= "&lat=".$_GET['lat'];
 						$queryVars .= "&long=".$_GET['long'];
 						$queryVars .= "&condition=1";
+						$queryVars .= "&numberofrecords=".$count;
 					}
 					break;
 				case 2:
-					if (isset($citydetails) && $citydetails !='') {
-						$queryVars .= "&city=".implode(",",$citydetails);
+					//if (isset($citydetails) && $citydetails !='') {
+					if (isset($chosencity) && $chosencity !='') {
+						$queryVars .= "&chosencity=".$chosencity;
 
 						$queryVars .= "&search_type=".$search_type;
 						$queryVars .= "&author=".$author;
 						$queryVars .= "&title=".$title;
 						$queryVars .= "&category=".$category;
-						$queryVars .= "&location=".$location;
+						$queryVars .= "&locationid=".$chosenlocationid;
 
 						//type, author, title, category, location
 						$queryVars .= "&lat=".$_GET['lat'];
 						$queryVars .= "&long=".$_GET['long'];
 					}
 					$queryVars .= "&condition=2";
+					$queryVars .= "&numberofrecords=".$count;
 					break;
 				case 3:
-					if (isset($citydetails) && $citydetails !='') {
-						$queryVars .= "&city=".implode(",",$citydetails);
+					if (isset($chosencity) && $chosencity !='') {
+						$queryVars .= "&chosencity=".$chosencity;
 						$queryVars .= "&search_type=".$search_type;
 						$queryVars .= "&author=".$author;
 						$queryVars .= "&title=".$title;
 						$queryVars .= "&category=".$category;
-						$queryVars .= "&location=".$location;
+						$queryVars .= "&locationid=".$chosenlocationid;
 
 						//type, author, title, category
 						$queryVars .= "&lat=".$_GET['lat'];
 						$queryVars .= "&long=".$_GET['long'];
 					}
 					$queryVars .= "&condition=3";
+					$queryVars .= "&numberofrecords=".$count;
 					break;
 				case 4:
 					if (isset($chosenlocationid) && $chosenlocationid !='') {
@@ -145,6 +149,7 @@ while($book = $pagedResults->fetchPagedRow()) { ?>
 						$queryVars .= "&long=".$_GET['long'];
 					}
 					$queryVars .= "&condition=4";
+					$queryVars .= "&numberofrecords=".$count;
 					break;
 					//condition 5 where a button is submitted without choosing a city or location
 				case 5:
@@ -155,20 +160,22 @@ while($book = $pagedResults->fetchPagedRow()) { ?>
 					$queryVars .= "&lat=".$_GET['lat'];
 					$queryVars .= "&long=".$_GET['long'];
 					$queryVars .= "&condition=5";
+					$queryVars .= "&numberofrecords=".$count;
 
 					break;
 				default:
-					if (isset($citydetails) && $citydetails !='') {
+					if (isset($chosencity) && $chosencity !='') {
 						//type, author, title, category
 						$queryVars .= "&search_type=".$search_type;
 						$queryVars .= "&author=".$author;
 						$queryVars .= "&title=".$title;
 						$queryVars .= "&category=".$category;
-						$queryVars .= "&location=".$location;
+						$queryVars .= "&locationid=".$chosenlocationid;
 						$queryVars .= "&lat=".$_GET['lat'];
 						$queryVars .= "&long=".$_GET['long'];
 					}
 					$queryVars .= "&condition=5";
+					$queryVars .= "&numberofrecords=".$count;
 					break;
 			}
 			?>

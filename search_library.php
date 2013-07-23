@@ -30,8 +30,9 @@ function displayLocationDiv() {
 </head>
 <body>
 <form method="post" name="search_library" action="our_library_cities.php" >
-<div id="search_contents">
+<div id="search_contents" class="cube">
 	<div id="search_by">
+		<br><br>
 		<p><b>Search By:</b></p>
 		<select name="search_type" id="search_type" style="width:140px;" onchange="displayCategoryDiv();">
 			<option value='' select="selected">--ALL--</option>

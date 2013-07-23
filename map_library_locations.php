@@ -94,6 +94,6 @@ var long= <?php echo $_GET['long'];?>;
   </head>
   <body>
 
-<div id="map_locations" style="width:800px; height:435px"></div>
+<div id="map_locations" style="width:800px; height:500px"></div>
   </body>
 </html>
