@@ -9,15 +9,17 @@ require_once "PageLayout.php";
 
 class Paginated {
 
-	private $rs;                  			//result set
+	private $rs;                  		//result set
 	private $pageSize;                      //number of records to display
 	private $pageNumber;                    //the page to be displayed
 	private $rowNumber;                     //the current row of data which must be less than the pageSize in keeping with the specified size
 	private $offSet;
 	private $layout;
+	private $numberofrecords;
 
-	function __construct($obj, $displayRows = 10, $pageNum = 1) {
+	function __construct($obj, $count, $displayRows = 10, $pageNum = 1) {
 		$this->setRs($obj);
+		$this->numberofrecords = $count;
 		$this->setPageSize($displayRows);
 		$this->assignPageNumber($pageNum);
 		$this->setRowNumber(0);
@@ -69,11 +71,7 @@ class Paginated {
 	}
 
 	public function fetchNumberPages() {
-		if (!$this->getRs()) {
-			return false;
-		}
-		
-		$pages = ceil(count($this->getRs()) / (float)$this->getPageSize());
+		$pages = ceil(($this->numberofrecords) / (float)$this->getPageSize());
 		return $pages;
 	}
 
@@ -90,14 +88,19 @@ class Paginated {
 	}
 
 	public function fetchPagedRow() {
+		/**
 		if((!$this->getRs()) || ($this->getRowNumber() >= $this->getPageSize())) {
 			return false;
 		}
 
 		$this->setRowNumber($this->getRowNumber() + 1);
 		$index = $this->getOffSet();
-		$this->setOffSet($this->getOffSet() + 1);
+		$this->setOffSet($this->getOffSet() + 1);**/
+		
+		$index = $this->getRowNumber();
+		$this->setRowNumber($this->getRowNumber() + 1);
 		return $this->rs[$index];
+		
 	}
 
 	public function isFirstPage() {

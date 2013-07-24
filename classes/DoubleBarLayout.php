@@ -16,7 +16,7 @@ class DoubleBarLayout implements PageLayout {
 	   	//if it is not the first page then write previous to the screen
 		if(!$parent->isFirstPage()) {
 			$previousPage = $currentPage - 1;
-			$str .= "<a href=\"?page=$previousPage$queryVars\">&lt; previous</a> ";
+			$str .= "<a href=\"?page=$previousPage$queryVars\">&lt;&nbspprevious&nbsp|&nbsp</a> ";
 		}
 
 		for($i = $currentPage - 2; $i <= $currentPage + 2; $i++) {
@@ -35,7 +35,7 @@ class DoubleBarLayout implements PageLayout {
 			else {
 				$str .= "<a href=\"?page=$i$queryVars\">$i</a>";
 			}
-			($i == $currentPage + 2 || $i == $parent->fetchNumberPages()) ? $str .= " " : $str .= " | ";              //determine if to print bars or not
+			($i == $currentPage + 2 || $i == $parent->fetchNumberPages()) ? $str .= "&nbsp" : $str .= "&nbsp|&nbsp";              //determine if to print bars or not
 		}//end for
 
 		if (!$parent->isLastPage()) {
@@ -47,7 +47,7 @@ class DoubleBarLayout implements PageLayout {
 
 		if(!$parent->isLastPage()) {
 			$nextPage = $currentPage + 1;
-			$str .= "<a href=\"?page=$nextPage$queryVars\">next &gt;</a>";
+			$str .= "<a href=\"?page=$nextPage$queryVars\">|&nbspnext&nbsp&gt;</a>";
 		}
 		return $str;
 	}

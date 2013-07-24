@@ -1,33 +1,45 @@
 <?php
 require_once("classes/LocationQuery.php");
 require_once("classes/Location.php");
+require_once("classes/StaffQuery.php");
+require_once("classes/Staff.php");
 
-	$locq = new LocationQuery();
-	//if a city is clicked on the map its locations are shown
-	//if a location is clicked this map it is refreshed
-	//if a location is chosen from the search bar and submit is pressed
-	if ( isset($chosencity) && ($chosencity!= '') && ($chosencity!= ' '))	{
-		$locations = $locq->getLocationsForCity($chosencity);
-	} 
+$locq = new LocationQuery();
+$staffq = new StaffQuery();
+
+//if a city is clicked on the map its locations are shown
+//if a location is clicked this map it is refreshed
+//if a location is chosen from the search bar and submit is pressed
+if ( isset($chosencity) && ($chosencity!= '') && ($chosencity!= ' '))	{
+	$locations = $locq->getLocationsForCity($chosencity);
+}
 
 ?>
 <!DOCTYPE html>
 <html>
-  <head>
-    <style type="text/css">
-html { height: 100% }
-body { height: 100%; margin: 0; padding: 0 }
+<head>
+<style type="text/css">
+html {
+	height: 100%
+}
+
+body {
+	height: 100%;
+	margin: 0;
+	padding: 0
+}
 </style>
-    <script type="text/javascript"
-      src="https://maps.googleapis.com/maps/api/js?&sensor=true">
+<script type="text/javascript"
+	src="https://maps.googleapis.com/maps/api/js?&sensor=true">
     </script>
-    <script type="text/javascript">
+<script type="text/javascript">
 	var points = [
 			<?php 	
 				$points="";
 				foreach($locations as $location) {
+				$staff =  $staffq->getDetailsForStaff($location->getStaffid());
 				$points.="['";
-				$points.=$location->getAddressOne();
+				$points.=$location->getAddressOne()."-".$location->getAddressTwo();
 				$points.="',";
 				$points.=$location->getLatitude();
 				$points.=",";
@@ -41,14 +53,19 @@ body { height: 100%; margin: 0; padding: 0 }
 				$points.=$_GET['lat'];
 				$points.="&long=";
 				$points.=$_GET['long'];
+				$points.="','";
+				$points.=$staff->getFirstName()." ".$staff->getLastName();
+				$points.="','";
+				$points.=$staff->getContactNumber();
+				$points.="','";
+				$points.=$staff->getEmail();
 				$points.="'],";
 				}
 				$points=substr($points,0,-1);
 				echo $points;
-
 			?>
 		   ];
-function setMarkers(map, locations) {
+	function setMarkers(map, locations) {
     var shape = {
         coord: [1, 1, 1, 20, 18, 20, 18, 1],
         type: 'poly'
@@ -66,7 +83,7 @@ function setMarkers(map, locations) {
             map: map,
             icon: flag,
             shape: shape,
-            title: place[0],
+            title: place[0] + "\n" + place[5] + "\n" + place[6] + "\n" + place[7],
             zIndex: place[3],
             url: place[4]
         });
@@ -91,9 +108,9 @@ var long= <?php echo $_GET['long'];?>;
 }
         google.maps.event.addDomListener(window,'load',initialize);
 </script>
-  </head>
-  <body>
+</head>
+<body>
 
-<div id="map_locations" style="width:800px; height:435px"></div>
-  </body>
+	<div id="map_locations" style="width: 800px; height: 500px"></div>
+</body>
 </html>

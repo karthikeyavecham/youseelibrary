@@ -31,45 +31,45 @@ if (isset($_GET['page']) && $_GET['page']!='')	{
 			$title=$_GET['title'];
 		if ($search_type == "category")
 			$category=$_GET['category'];
-		
-		$citydetails=explode(",",$_GET['city']);
-		$chosencity=$citydetails[0];
-		$lat=$citydetails[1];$_GET['lat']=$lat;
-		$long=$citydetails[2];$_GET['long']=$long;
-		$chosenlocationid=$_GET['location'];
+
+		$chosencity=$_GET['chosencity'];
+		$lat=$_GET['lat'];
+		$long=$_GET['long'];
+		$chosenlocationid=$_GET['locationid'];
 
 	} else if ($condition==3)	{
-		
+
 		$search_type=$_GET['search_type'];
-		
+
 		if ($search_type == "author")
 			$author=$_GET['author'];
 		if ($search_type == "title")
 			$title=$_GET['title'];
 		if ($search_type == "category")
 			$category=$_GET['category'];
-		
-		$citydetails=explode(",",$_GET['city']);
-		$chosencity=$citydetails[0];
-		$lat=$citydetails[1];$_GET['lat']=$lat;
-		$long=$citydetails[2];$_GET['long']=$long;
+
+		//		$citydetails=explode(",",$_GET['city']);
+		$chosencity=$_GET['chosencity'];
+		$lat=$_GET['lat'];
+		$long=$_GET['long'];
+
 
 	} else if ($condition==4)	{
 
 		$chosenlocationid=$_GET['locationid'];
 		$chosencity=$cityq->getCityOfLocation($chosenlocationid);
-		
+
 	} else if ($condition == 5)	{
-		
+
 		$search_type=$_GET['search_type'];
-		
+
 		if ($search_type == "author")
 			$author=$_GET['author'];
 		if ($search_type == "title")
 			$title=$_GET['title'];
 		if ($search_type == "category")
-			$category=$_GET['category'];		
-		
+			$category=$_GET['category'];
+
 	}
 
 } else  if ( (isset($_POST['Submit'])) ) {
@@ -87,12 +87,12 @@ if (isset($_GET['page']) && $_GET['page']!='')	{
 
 	if ( ($citydetails != "") && ($citydetails[0] != "") ) {
 
-		if ( isset($_POST['location']) && ($_POST['location']!='') )	{
-			$chosenlocationid=$_POST['location'];
+		if ( isset($_POST['locationid']) && ($_POST['locationid']!='') )	{
+			$chosenlocationid=$_POST['locationid'];
 			$condition=2;
 		}
-
-		$condition=3;
+		else
+			$condition=3;
 		$chosencity=$citydetails[0];
 		$lat=$citydetails[1];$_GET['lat']=$lat;
 		$long=$citydetails[2];$_GET['long']=$long;
@@ -135,6 +135,7 @@ else if(isset($_GET['locationid']) && $_GET['locationid']!='')	{
 <link href="css/table.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" href="test/test.css">
 <link rel="stylesheet" type="text/css" href="css/tabs.css">
+<link rel="stylesheet" type="text/css" href="css/opencity.css">
 <link rel="stylesheet" href="scripts/jquery-ui.css">
 <script src="scripts/jquery-1.8.3.js"></script>
 <script src="scripts/jquery.ui.core.js"></script>
@@ -160,8 +161,22 @@ else if(isset($_GET['locationid']) && $_GET['locationid']!='')	{
 				</tr>
 				<tr>
 					<td valign="top">
-						<div class="left_div" style="float: left">
+						<div class="container">
 							<?php include 'search_library.php';?>
+							<div class="cube">
+								<div>
+									<br> <br> <a  href="opencityregistration.php"><font color="#0B3861"> <?php echo "Register to become a Member of the Library.";?>
+									</font></a> 
+								</div>
+								<div align="justify">
+									<br> <br> <font color="#0B3861" ><center><?php echo "OR";?> </center>
+									</font>
+								</div>
+								<div align="justify">
+									<br> <br> <font color="#0B3861"><?php echo "Contact the librarian at your chosen location to start using the library.";?> 
+									</font>
+								</div>
+							</div>
 						</div>
 					</td>
 					<td valign="top">
@@ -169,25 +184,14 @@ else if(isset($_GET['locationid']) && $_GET['locationid']!='')	{
 						//when a city is clicked upon in the map, display the locations of the city that have a open library
 						if  ( $condition==1 || $condition==2 || $condition==3 || $condition==4) {
 ?>
-						<div id="mapCitiesWithBooks"  >
-							<?php 
-							include 'display_search_conditions.php';
-							?>
-						</div>  
-						<div id="mapLocations"   >
+						<div id="mapLocations">
 							<?php
 							include 'map_library_locations.php';
 							?>
 						</div> <?php 
 } else  {
 ?>
-		
-						<div id="mapCitiesWithBooks"  >
-							<?php 
-							include 'display_search_conditions.php';
-							?>
-						</div>  
-						<div id="mapCitiesWithBooks"  >
+						<div id="mapCitiesWithBooks">
 							<?php 
 							include 'map_library_cities.php';
 							?>

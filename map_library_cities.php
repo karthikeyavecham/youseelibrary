@@ -85,6 +85,6 @@ function initialize() {
 </script>
 </head>
 <body>
-	<div id="map_canvas" style="width:800px; height:435px"></div>
+	<div id="map_canvas" style="width:800px; height:500px"></div>
 </body>
 </html>
