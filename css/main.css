@@ -77,13 +77,12 @@ body {
 }
 
 /* left_div settings*/
-#left_div {
-	float: left;
-	width: 495px;
+.left_div {
+	width: auto;
 }
 
 /* right_div settings*/
-#right_div {
+.right_div {
 	float: right;
 	width: 495px;
 }

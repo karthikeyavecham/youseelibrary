@@ -39,12 +39,12 @@ class LocationQuery extends Query {
    * *
    * */
 	function getLocationsForCity($city){
-		$sql = $this->mkSQL("select locationid, loc_address_one, loc_address_two, loc_latitude, loc_longitude 
+		$sql = $this->mkSQL("select locationid, loc_address_one, loc_address_two, loc_latitude, loc_longitude ,staffid 
 					 from biblio_location where loc_city = %Q ", $city);
 		return array_map(array($this, '_mkObj'), $this->exec($sql));
 	}
 	function getLocationsInTheSameCityAs($locationid){
-		$sql = $this->mkSQL("select locationid, loc_address_one, loc_address_two, loc_latitude, loc_longitude 
+		$sql = $this->mkSQL("select locationid, loc_address_one, loc_address_two, loc_latitude, loc_longitude ,staffid 
 					 from biblio_location where loc_city = (select loc_city from biblio_location where locationid = %N) ", $locationid);
 		return array_map(array($this, '_mkObj'), $this->exec($sql));
 	}
