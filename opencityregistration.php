@@ -9,7 +9,7 @@ $regPage="";
 $msg=" ";
 /** Validate captcha */
 
-if (isset($_POST['donorSubmit']))
+if (isset($_POST['memSubmit']))
 {
 
 	if (empty($_SESSION['captcha']) || trim(strtolower($_POST['captcha'])) != $_SESSION['captcha']) {
@@ -28,44 +28,9 @@ if (isset($_POST['donorSubmit']))
 		echo "jfksdjg ";
 		header("Location: processRegistrations.php");
 
-		exit();
-
 	}
 
-	//header("Location: processRegistrations.php");
-
-
-
 }
-if (isset($_POST['ngoSubmit']))
-{
-
-	if (empty($_SESSION['captcha']) || trim(strtolower($_POST['captchango'])) != $_SESSION['captcha']) {
-
-		$captcha_message = "Invalid captcha";
-		$style = "background-color: #FF606C";
-		$msg="Captcha entered is incorrect";
-			
-	} else {
-		$captcha_message = "Valid captcha";
-		$style = "background-color: #CCFF99";
-		echo "before ";
-		$_SESSION['POST']=$_POST;
-
-		echo "after ";
-		echo "jfksdjg ";
-		header("Location: processRegistrations.php");
-
-		exit();
-
-	}
-
-	//header("Location: processRegistrations.php");
-
-
-
-}
-
 
 ?>
 
@@ -113,10 +78,10 @@ function redirectToOpenCityLibraryListing() {
 				</tr>
 			</table>
 
-			<div id="donorRegScreen" style="display: block;">
-				<form name="donor" action="<?php echo $_SERVER['PHP_SELF'];?>"
+			<div id="memberRegScreen" style="display: block;">
+				<form name="member" action="<?php echo $_SERVER['PHP_SELF'];?>"
 					method="post">
-					<input type="hidden" name="formName" value="donorReg" />
+					<input type="hidden" name="formName" value="memberReg" />
 
 
 
@@ -130,28 +95,15 @@ function redirectToOpenCityLibraryListing() {
 										<td><label for="firstName">First name*</label></td>
 										<td><input name="fname" type="text" id="firstName" value="" />
 										</td>
-										<td><div class="error" id="donor_fname_errorloc"></div></td>
+										<td><div class="error" id="member_fname_errorloc"></div></td>
 									</tr>
 									<tr>
 										<td><label for="lastName">Last name*</label></td>
 										<td><input name="lname" type="text" id="lastName" value="" />
 										</td>
-										<td><div class="error" id="donor_lname_errorloc"></div></td>
+										<td><div class="error" id="member_lname_errorloc"></div></td>
 									</tr>
 									<tr>
-									
-									
-									<tr>
-										<td>Gender</td>
-										<td><p>
-												<label> <input type="radio" name="gender" value="M"
-													id="radio_m" /> Male
-												</label> <label> <input type="radio" name="gender" value="F"
-													id="radio_f" /> Female
-												</label> <br />
-											</p></td>
-										<td><div class="error" id="donor_fname_errorloc"></div></td>
-									</tr>
 									<tr>
 										<td><label for="phone_number">Phone number*</label>
 										</td>
@@ -160,12 +112,11 @@ function redirectToOpenCityLibraryListing() {
 											value="" />
 										</td>
 										<td>
-											<div class="error" id="donor_phno_errorloc"></div>
+											<div class="error" id="member_phno_errorloc"></div>
 										</td>
 									</tr>
 									<tr>
-										<td><label for="personal_emailid">Preferred Email ID*<br /> <span
-												style="font-size: 10px">(Default Login username) 
+										<td><label for="personal_emailid">Preferred Email ID*<br /> 
 										
 										</label>
 										</td>
@@ -173,42 +124,23 @@ function redirectToOpenCityLibraryListing() {
 											value="" name="preferredEmail" id="preferred_emailid" />
 										</td>
 										<td>
-											<div class="error" id="donor_preferredEmail_errorloc"></div>
+											<div class="error" id="member_preferredEmail_errorloc"></div>
 										</td>
-									</tr>
-									<tr>
-										<td><label for="password">Password*</label>
-										</td>
-										<td><input type="password" name="password" id="password"
-											value="" /></td>
-										<td><div class="error" id="donor_password_errorloc"></div></td>
-									</tr>
-									<tr>
-										<td><label for="password">Retype Password*</label></td>
-										<td><input type="password" name="repassword" id="cpassword"
-											value="" /></td>
-										<td><div class="error" id="donor_repassword_errorloc"></div></td>
 									</tr>
 								</table>
 						
 						</fieldset>
 					</div>
 					<script type="text/javascript">
- 	var frmvalidator  = new Validator("donor");
+ 	var frmvalidator  = new Validator("member");
 	frmvalidator.EnableFocusOnError(true);
 	frmvalidator.EnableOnPageErrorDisplay();
 	frmvalidator.EnableMsgsTogether();
 	frmvalidator.addValidation("fname","req","please enter first name");
 	frmvalidator.addValidation("lname","req","please enter last name");
-  </script>
-					<script type="text/javascript">
-		frmvalidator.addValidation("phno", "req", "	*Please enter  your Phone Number");
-		frmvalidator.addValidation("preferredEmail", "email", "	*Please enter your Email properly");
-		frmvalidator.addValidation("preferredEmail", "req", "	*Please enter your Email.");
-		frmvalidator.addValidation("password", "req", "	please enter your password");
-		frmvalidator.addValidation("cpassword", "req", "	retype Password cannot be empty");
-		frmvalidator.addValidation("password", "minlen=6", "	password should have atleast 6 characters");
-		frmvalidator.addValidation("password","eqelmnt=cpassword","The confirmed password is not same as your new password");
+	frmvalidator.addValidation("phno", "req", "	*Please enter  your Phone Number");
+	frmvalidator.addValidation("preferredEmail", "email", "	*Please enter your Email properly");
+	frmvalidator.addValidation("preferredEmail", "req", "	*Please enter your Email.");
 	
 		</script>
 					</fieldset>
@@ -237,7 +169,7 @@ function redirectToOpenCityLibraryListing() {
 
 		</script>
 					<div style="margin-left: 100px;">
-						<input id="register" style="visibility: visible" name="submit"
+						<input id="register" style="visibility: visible" name="memSubmit"
 							type="submit" value="Register" /> <input id="register"
 							style="visibility: visible" name="cancel" type="button"
 							value="Cancel" onclick="redirectToOpenCityLibraryListing()">
@@ -254,9 +186,3 @@ function redirectToOpenCityLibraryListing() {
 	</div>
 </body>
 </html>
-<?php
-/*
- Version Track
-1 - 17May13 - Vivek - Registration form modified.
-*/
-?>
