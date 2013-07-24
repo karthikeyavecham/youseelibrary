@@ -48,11 +48,11 @@ if (isset($_GET['page']) && $_GET['page']!='')	{
 		if ($search_type == "category")
 			$category=$_GET['category'];
 
-//		$citydetails=explode(",",$_GET['city']);
+		//		$citydetails=explode(",",$_GET['city']);
 		$chosencity=$_GET['chosencity'];
 		$lat=$_GET['lat'];
 		$long=$_GET['long'];
-		
+
 
 	} else if ($condition==4)	{
 
@@ -164,8 +164,18 @@ else if(isset($_GET['locationid']) && $_GET['locationid']!='')	{
 						<div class="container">
 							<?php include 'search_library.php';?>
 							<div class="cube">
-								<br> <br> <font><a href="opencityregistration.php"> <?php echo "Become a Member";?>
-								</a> </font>
+								<div>
+									<br> <br> <a  href="opencityregistration.php"><font color="#0B3861"> <?php echo "Register to become a Member of the Library.";?>
+									</font></a> 
+								</div>
+								<div align="justify">
+									<br> <br> <font color="#0B3861" ><center><?php echo "OR";?> </center>
+									</font>
+								</div>
+								<div align="justify">
+									<br> <br> <font color="#0B3861"><?php echo "Contact the librarian at your chosen location to start using the library.";?> 
+									</font>
+								</div>
 							</div>
 						</div>
 					</td>
