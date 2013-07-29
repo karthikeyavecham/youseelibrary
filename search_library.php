@@ -30,7 +30,7 @@ function displayLocationDiv() {
 </head>
 <body>
 <form method="post" name="search_library" action="our_library_cities.php" >
-<div id="search_contents" class="cube">
+<div id="search_contents" class="cube-I">
 	<div id="search_by">
 		<br><br>
 		<p><b>Search By:</b></p>
