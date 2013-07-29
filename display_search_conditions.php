@@ -6,16 +6,27 @@
 <body>
 	<div id="searchConditionsDisplayed" style="width: 800px; height: 50px">
 		<table>
-			<tr style="background: #ccc">
-				<th>Search Details:</th>
-			</tr>
-			<?php 
-			if ((isset($category)) && ($category != '')) echo "<td>Category:  ".$category." </td><td>\t</td>";
-			if ((isset($title)) && ($title != '')) echo "<td>Title: ".$title." </td><td>\t</td>";
-			if ((isset($author)) && ($author != '')) echo "<td>Author: ".$author." </td><td>\t</td>";
-			if ((isset($_POST['city'])) && ($_POST['city'] != '')) echo "<td>City: ".$chosencity." </td><td>\t</td>";
-			if ( isset($_POST['location']) && ($_POST['location']!='') ) echo "<td>Location: ".$chosenlocationid." </td><td>\t</td>";
-			?>
+			<tr><font style=" color:#0B3861;font-weight:bold;font-size:16px;"><br>Search Details: </font>
+			<font style=" color:red;font-weight:bold;font-size:14px;">&nbsp;&nbsp;&nbsp;
+			<?php if ((isset($category)) && ($category != '')) echo "Category: "?></font>
+			<font style=" color:blue;font-size:14px;">
+			<?php echo $category." ";?></font>
+			<font style=" color:red;font-weight:bold;font-size:14px;">&nbsp;&nbsp;&nbsp;
+			<?php if ((isset($title)) && ($title != '')) echo "Title: ";?>&nbsp;</font>
+			<font style=" color:blue;font-size:14px;">
+			<?php echo $title." ";?></font>
+			<font style=" color:red;font-weight:bold;font-size:14px;">&nbsp;&nbsp;&nbsp;
+			<?php if ((isset($author)) && ($author != '')) echo "Author: ";?>&nbsp;</font>
+			<font style=" color:blue;font-size:14px;">
+			<?php echo $author." ";?></font>
+			<font style=" color:red;font-weight:bold;font-size:14px;">&nbsp;&nbsp;&nbsp;
+			<?php if ((isset($_POST['city'])) && ($_POST['city'] != '')) echo "City: ";?>&nbsp;&nbsp;</font>
+			<font style=" color:blue;font-size:14px;">
+			<?php echo $chosencity." ";?></font>
+			<font style=" color:red;font-weight:bold;font-size:14px;">&nbsp;&nbsp;&nbsp;
+			<?php if ( isset($_POST['locationid']) && ($_POST['locationid']!='') ) echo "Location: ";?></font>
+			<font style=" color:blue;font-size:14px;">
+			<?php echo $chosenlocationid." ";?></font>
 			</tr>
 		</table>
 	</div>

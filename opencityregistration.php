@@ -1,35 +1,35 @@
-<?php $thispage ="registration";
-$regPage="";
-?>
-
-<?php session_start();
+<?php
+$thispage = "registration";
+$regPage = "";
 ?>
 
 <?php
-$msg=" ";
-/** Validate captcha */
 
-if (isset($_POST['memSubmit']))
-{
+session_start ();
+?>
 
-	if (empty($_SESSION['captcha']) || trim(strtolower($_POST['captcha'])) != $_SESSION['captcha']) {
+<?php
+/**
+ * Validate captcha
+ */
 
+if (isset ( $_POST ['memSubmit'] )) {
+	
+	if (empty ( $_SESSION ['captcha'] ) || trim ( strtolower ( $_POST ['captcha'] ) ) != $_SESSION ['captcha']) {
+		
 		$captcha_message = "Invalid captcha";
 		$style = "background-color: #FF606C";
-		$msg="Captcha entered is incorrect";
-			
+		$msg = "Captcha entered is incorrect";
 	} else {
 		$captcha_message = "Valid captcha";
 		$style = "background-color: #CCFF99";
 		echo "before ";
-		$_SESSION['POST']=$_POST;
-
+		$_SESSION ['POST'] = $_POST;
+		
 		echo "after ";
 		echo "jfksdjg ";
-		header("Location: processRegistrations.php");
-
+		header ( "Location: opencityregistration.php" );
 	}
-
 }
 
 ?>
@@ -61,6 +61,20 @@ function redirectToOpenCityLibraryListing() {
 	window.location.href="our_library_cities.php";
 }
 </script>
+<script type="text/javascript">
+function processRegistration()	{
+	name=
+	$.ajax({
+		type : "POST",
+		data : name : name,
+		url  : "processregistration.php",
+		success : function(returnData){
+				$("#memberRegScreen").children().remove();
+				$("#memberRegScreen").append(returnData);
+		}
+	});
+}
+</script>
 </head>
 <body>
 	<div id="wrapper">
@@ -79,8 +93,7 @@ function redirectToOpenCityLibraryListing() {
 			</table>
 
 			<div id="memberRegScreen" style="display: block;">
-				<form name="member" action="<?php echo $_SERVER['PHP_SELF'];?>"
-					method="post">
+				<form name="member" action="processRegistration();" method="post">
 					<input type="hidden" name="formName" value="memberReg" />
 
 
@@ -104,25 +117,23 @@ function redirectToOpenCityLibraryListing() {
 										<td><div class="error" id="member_lname_errorloc"></div></td>
 									</tr>
 									<tr>
+									
+									
 									<tr>
-										<td><label for="phone_number">Phone number*</label>
-										</td>
+										<td><label for="phone_number">Phone number*</label></td>
 										<td><input placeholder="Enter your 10 digit Mobile no.. "
 											type="text" maxlength="10" name="phno" id="phone_number"
-											value="" />
-										</td>
+											value="" /></td>
 										<td>
 											<div class="error" id="member_phno_errorloc"></div>
 										</td>
 									</tr>
 									<tr>
-										<td><label for="personal_emailid">Preferred Email ID*<br /> 
-										
-										</label>
-										</td>
+										<td><label for="personal_emailid">Preferred Email ID*<br />
+
+										</label></td>
 										<td><input type="text" placeholder="example@yourdomain.com"
-											value="" name="preferredEmail" id="preferred_emailid" />
-										</td>
+											value="" name="preferredEmail" id="preferred_emailid" /></td>
 										<td>
 											<div class="error" id="member_preferredEmail_errorloc"></div>
 										</td>
@@ -164,10 +175,6 @@ function redirectToOpenCityLibraryListing() {
 							</tr>
 						</table>
 					</fieldset>
-					<script type="text/javascript">
-
-
-		</script>
 					<div style="margin-left: 100px;">
 						<input id="register" style="visibility: visible" name="memSubmit"
 							type="submit" value="Register" /> <input id="register"
