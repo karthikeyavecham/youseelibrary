@@ -1,22 +1,12 @@
 <?php
-$thispage = "registration";
-$regPage = "";
-?>
-
-<?php
-
-session_start ();
-?>
-
-<?php
 /**
  * Validate captcha
  */
 
 if (isset ( $_POST ['memSubmit'] )) {
-	
+
 	if (empty ( $_SESSION ['captcha'] ) || trim ( strtolower ( $_POST ['captcha'] ) ) != $_SESSION ['captcha']) {
-		
+
 		$captcha_message = "Invalid captcha";
 		$style = "background-color: #FF606C";
 		$msg = "Captcha entered is incorrect";
@@ -25,7 +15,7 @@ if (isset ( $_POST ['memSubmit'] )) {
 		$style = "background-color: #CCFF99";
 		echo "before ";
 		$_SESSION ['POST'] = $_POST;
-		
+
 		echo "after ";
 		echo "jfksdjg ";
 		header ( "Location: opencityregistration.php" );
@@ -44,7 +34,7 @@ if (isset ( $_POST ['memSubmit'] )) {
 <link rel="stylesheet" type="text/css" href="test/test.css">
 
 <link rel="stylesheet" href="scripts/jquery-ui.css">
-<script src="scripts/jquery.min.js"></script>
+<script src="scripts/jquery-1.8.3.js"></script>
 <script src="scripts/jquery.ui.core.js"></script>
 <script src="scripts/jquery.ui.widget.js"></script>
 <script src="scripts/datepicker.js"></script>
@@ -54,8 +44,7 @@ if (isset ( $_POST ['memSubmit'] )) {
 		$( "#dobngo" ).datepicker();
 	});
 	</script>
-<script src="scripts/tabscripts.js"></script>
-<script src="scripts/reg_validatorv4.js" type="text/javascript"></script>
+<script src="scripts/gen_validatorv4.js" type="text/javascript"></script>
 <script type="text/javascript">
 function redirectToOpenCityLibraryListing() {
 	window.location.href="our_library_cities.php";
@@ -63,16 +52,41 @@ function redirectToOpenCityLibraryListing() {
 </script>
 <script type="text/javascript">
 function processRegistration()	{
-	name=
+	fname=document.getElementById("firstName").value;
+	lname=document.getElementById("lastName").value;
+	
+	phone=document.getElementById("phone_number").value;
+	email=document.getElementById("preferred_emailid").value;
+	
 	$.ajax({
 		type : "POST",
-		data : name : name,
+		data : {fname:fname,lname:lname,phone:phone,email:email},
 		url  : "processregistration.php",
 		success : function(returnData){
+	//		alert(returnData);
+		
+			$msgs=returnData.split(",");
+			alert($msgs[0]);
+			if(strlen($msgs[0])>1)
+			{
+				if($msgs[0]!="")
+				{
+					$("#member_preferredEmail_errorloc").load($msgs[0]);
+				}
+				if($msgs[1]!="")
+				{
+					$("#member_phno_errorloc").load($msgs[1]);
+				}
+			}
+			else
+			{
 				$("#memberRegScreen").children().remove();
 				$("#memberRegScreen").append(returnData);
+			}
 		}
 	});
+	
+	return false;
 }
 </script>
 </head>
@@ -93,7 +107,7 @@ function processRegistration()	{
 			</table>
 
 			<div id="memberRegScreen" style="display: block;">
-				<form name="member" action="processRegistration();" method="post">
+				<form name="member" method="post">
 					<input type="hidden" name="formName" value="memberReg" />
 
 
@@ -177,9 +191,10 @@ function processRegistration()	{
 					</fieldset>
 					<div style="margin-left: 100px;">
 						<input id="register" style="visibility: visible" name="memSubmit"
-							type="submit" value="Register" /> <input id="register"
-							style="visibility: visible" name="cancel" type="button"
-							value="Cancel" onclick="redirectToOpenCityLibraryListing()">
+							type="button" value="Register" onclick="processRegistration();" />
+						<input id="register" style="visibility: visible" name="cancel"
+							type="button" value="Cancel"
+							onclick="redirectToOpenCityLibraryListing()">
 					</div>
 
 				</form>
