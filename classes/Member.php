@@ -3,8 +3,8 @@
  * See the file COPYRIGHT.html for more details.
  */
  
-  require_once("../functions/formatFuncs.php");
-
+  require_once("functions/formatFuncs.php");
+  
 /******************************************************************************
  * Member represents a library member.  Contains business rules for
  * member data validation.
