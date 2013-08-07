@@ -2,6 +2,13 @@
 /**
  * Validate captcha
  */
+ session_start();
+ $thispage="more";
+$msg='';
+$fname='';
+$lname='';
+$phone='';
+$email='';
 
 if (isset ( $_POST ['memSubmit'] )) {
 
@@ -13,15 +20,24 @@ if (isset ( $_POST ['memSubmit'] )) {
 	} else {
 		$captcha_message = "Valid captcha";
 		$style = "background-color: #CCFF99";
-		echo "before ";
 		$_SESSION ['POST'] = $_POST;
-
-		echo "after ";
-		echo "jfksdjg ";
 		header ( "Location: opencityregistration.php" );
 	}
 }
-
+if(isset($_SESSION['SESS_USER_ID'])){
+	if($_SESSION['SESS_USER_TYPE']="A" || $_SESSION['SESS_USER_TYPE']=="D"){
+		include("../prod_conn.php");
+		$q="SELECT first_name fname,last_name lname,mobile_phone_no phone,preferred_email email FROM donors WHERE donor_id=$_SESSION[SESS_DONOR_ID]";
+		$result=mysql_query($q);
+		if(mysql_num_rows($result)==1){
+				$row=mysql_fetch_array($result);
+				$fname=$row['fname'];
+				$lname=$row['lname'];
+				$phone=$row['phone'];
+				$email=$row['email'];
+		}
+}
+}
 ?>
 
 
@@ -30,173 +46,175 @@ if (isset ( $_POST ['memSubmit'] )) {
 <head>
 <title>Registration</title>
 <meta charset="utf-8">
-<link rel="stylesheet" type="text/css" href="css/main.css">
-<link rel="stylesheet" type="text/css" href="test/test.css">
-
-<link rel="stylesheet" href="scripts/jquery-ui.css">
-<script src="scripts/jquery-1.8.3.js"></script>
-<script src="scripts/jquery.ui.core.js"></script>
-<script src="scripts/jquery.ui.widget.js"></script>
-<script src="scripts/datepicker.js"></script>
-<script type="text/javascript">
-		$(function() {
-		$( "#dob" ).datepicker();
-		$( "#dobngo" ).datepicker();
-	});
-	</script>
-<script src="scripts/gen_validatorv4.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="../css/main.css">
+<link rel="stylesheet" type="text/css" href="../css/opencity.css">
+<script src="../scripts/jquery.min.js"></script>
+<script src="../scripts/reg_validatorv4.js" type="text/javascript"></script>
 <script type="text/javascript">
 function redirectToOpenCityLibraryListing() {
 	window.location.href="our_library_cities.php";
 }
 </script>
 <script type="text/javascript">
-function processRegistration()	{
+$(document).ready(function(){
+	$("#regform").submit(function(e){
+	e.preventDefault();
 	fname=document.getElementById("firstName").value;
 	lname=document.getElementById("lastName").value;
-	
 	phone=document.getElementById("phone_number").value;
 	email=document.getElementById("preferred_emailid").value;
-	
+	if(fname!=''&&lname!=''&&phone!=''&&email!=''){
 	$.ajax({
 		type : "POST",
 		data : {fname:fname,lname:lname,phone:phone,email:email},
 		url  : "processregistration.php",
 		success : function(returnData){
-	//		alert(returnData);
-		
+	
 			$msgs=returnData.split(",");
-			alert($msgs[0]);
-			if(strlen($msgs[0])>1)
-			{
-				if($msgs[0]!="")
+			regemail = /email address has already been registered/gi;
+			regphone = /Phone Number has already been registered/gi;
+			regsuccess = /You have succesfully registerd/gi;
+			$("#member_preferredEmail_errorloc").hide();
+			$("#member_phno_errorloc").hide();
+			for (var i=0; i<$msgs.length; i++) {
+				if($msgs[i].match(regemail))
 				{
-					$("#member_preferredEmail_errorloc").load($msgs[0]);
+					$("#member_preferredEmail_errorloc").replaceWith("<div id='member_preferredEmail_errorloc' class='error' style='width:300px;font-size:11px;'>"+$msgs[i]+"</div>");
+					$("#member_preferredEmail_errorloc").show();
 				}
-				if($msgs[1]!="")
+				if($msgs[i].match(regphone))
 				{
-					$("#member_phno_errorloc").load($msgs[1]);
+					$("#member_phno_errorloc").replaceWith("<div id='member_phno_errorloc' class='error' style='width:300px;font-size:11px;'>"+$msgs[i]+"</div>");
+					$("#member_phno_errorloc").show();
+					
+				} 
+				if($msgs[i].match(regsuccess))
+				{
+					$("#success_msg").replaceWith("<strong>Hello"+$msgs[i]+"</strong>");
+					$("#captcha-tab").replaceWith("<br><br><a href='our_library_cities.php'>Click here to go back to Book Listing Page</a>");
+					$("#buttondiv").hide();
+					$("#member_preferredEmail_errorloc").hide();
+					$("#member_phno_errorloc").hide();
+					$("#fname").replaceWith("<font style='font-size:16px;font-family:Trebuchet MS;'>First Name : "+$("#firstName").val()+"</font>");
+					$("#lname").replaceWith("<font style='font-size:16px;font-family:Trebuchet MS;'>Last Name : "+$("#lastName").val()+"</font>");
+					$("#phone").replaceWith("<font style='font-size:16px;font-family:Trebuchet MS;'>Mobile No. : "+$("#phone_number").val()+"</font>");
+					$("#email").replaceWith("<font style='font-size:16px;font-family:Trebuchet MS;'>Email : "+$("#preferred_emailid").val()+"</font>");
 				}
-			}
-			else
-			{
-				$("#memberRegScreen").children().remove();
-				$("#memberRegScreen").append(returnData);
 			}
 		}
 	});
-	
-	return false;
-}
+	}
+});
+});
 </script>
+
 </head>
 <body>
 	<div id="wrapper">
 		<div style="background: #FFF;">
-			<?php include("header_navbar.php"); ?>
+			<?php include("../header_navbar.php"); ?>
+<style>
+.form{
+	padding:5px;
+	font-weight:bold;
+	font-family:Trebuchet MS;
+	font-size:16px;
+	width:300px;
+	height:30px;
+}
 
+</style>
+<div class="info" id="success_msg" style="margin:20px;"><strong style="border-bottom:1px solid #369;color:#369;font-size:18px;font-family:Trebuchet MS;">Membership Form for Open City Library</strong>
+</div>
 
-			<table>
-				<tr>
-					<td>
-						<p>
-							<strong>Registration Form</strong>
-						</p>
-					</td>
-				</tr>
-			</table>
-
-			<div id="memberRegScreen" style="display: block;">
-				<form name="member" method="post">
+			<div id="memberRegScreen" style="display: block;margin:20px;">
+				<form name="member" method="post" id="regform">
 					<input type="hidden" name="formName" value="memberReg" />
 
 
-
 					<div style="margin-left: 30px;">
-						<fieldset>
+						<fieldset style="font-size:16px;font-family:Trebuchet MS;color:#666;">
 							<legend>Personal & Contact Info</legend>
 							<div>
-
-								<table border="0">
+							
+								<table border="0" align="center">
 									<tr>
-										<td><label for="firstName">First name*</label></td>
-										<td><input name="fname" type="text" id="firstName" value="" />
-										</td>
-										<td><div class="error" id="member_fname_errorloc"></div></td>
+										<!-- <td><label for="firstName">First name<font color="red">*</font></label></td> -->
+										<td id="fname"><input placeholder="First name" class="form" name="fname" type="text" id="firstName" value="<?php echo $fname; ?>" />
+										<font color="red">*</font></td></tr>
+									<tr><td><div class="error" style="width:300px;font-size:11px;" id="member_fname_errorloc"></div></td>
 									</tr>
 									<tr>
-										<td><label for="lastName">Last name*</label></td>
-										<td><input name="lname" type="text" id="lastName" value="" />
-										</td>
-										<td><div class="error" id="member_lname_errorloc"></div></td>
+										<!--<td><label for="lastName">Last name<font color="red">*</font></label></td>-->
+										<td id="lname"><input placeholder="Last name" class="form" name="lname" type="text" id="lastName" value="<?php echo $lname; ?>" />
+										<font color="red">*</font></td>
+									</tr>
+									<tr>
+										<td><div class="error" style='width:300px;font-size:11px;' id="member_lname_errorloc"></div></td>
 									</tr>
 									<tr>
 									
 									
 									<tr>
-										<td><label for="phone_number">Phone number*</label></td>
-										<td><input placeholder="Enter your 10 digit Mobile no.. "
-											type="text" maxlength="10" name="phno" id="phone_number"
-											value="" /></td>
+										<!--<td><label for="phone_number">Phone number<font color="red">*</font></label></td>-->
+										<td id="phone"><input placeholder="Mobile phone no." size="20" 
+											type="text" maxlength="10" class="form" name="phno" id="phone_number"
+											value="<?php echo $phone; ?>" />
+										<font color="red">*</font></td>
+									</tr>
+									<tr>
 										<td>
-											<div class="error" id="member_phno_errorloc"></div>
+											<div class="error" style="width:300px;font-size:11px;" id="member_phno_errorloc"></div>
 										</td>
 									</tr>
 									<tr>
-										<td><label for="personal_emailid">Preferred Email ID*<br />
+										<!--<td><label for="personal_emailid">Preferred Email ID<font color="red">*</font><br />
 
-										</label></td>
-										<td><input type="text" placeholder="example@yourdomain.com"
-											value="" name="preferredEmail" id="preferred_emailid" /></td>
+										</label></td>-->
+										<td id="email"><input size="30" type="text" class="form" placeholder="example@yourdomain.com"
+											value="<?php echo $email; ?>" name="preferredEmail" id="preferred_emailid" />
+										<font color="red">*</font></td>
+									</tr>
+									<tr>
 										<td>
-											<div class="error" id="member_preferredEmail_errorloc"></div>
+											<div class="error" style="width:300px;font-size:11px;" id="member_preferredEmail_errorloc"></div>
 										</td>
 									</tr>
-								</table>
-						
-						</fieldset>
+								</table>		
 					</div>
-					<script type="text/javascript">
- 	var frmvalidator  = new Validator("member");
-	frmvalidator.EnableFocusOnError(true);
-	frmvalidator.EnableOnPageErrorDisplay();
-	frmvalidator.EnableMsgsTogether();
-	frmvalidator.addValidation("fname","req","please enter first name");
-	frmvalidator.addValidation("lname","req","please enter last name");
-	frmvalidator.addValidation("phno", "req", "	*Please enter  your Phone Number");
-	frmvalidator.addValidation("preferredEmail", "email", "	*Please enter your Email properly");
-	frmvalidator.addValidation("preferredEmail", "req", "	*Please enter your Email.");
-	
-		</script>
-					</fieldset>
-					<fieldset style="margin-left: 30px;">
-						<legend>Confirm That You are not a Robot</legend>
-						<table>
+					
+						<table id="captcha-tab" align="center">
 							<tr>
-								<td>&nbsp</td>
-								<td>
-									<p>
-										<strong>Write the following word:</strong>
-									</p> <img src="captcha/captcha.php" id="captcha" /><br /> <a
-									href="#"
+								<td align="center"> <img src="../captcha/captcha.php" id="captcha" /><br /> <a
 									onclick="
-		document.getElementById('captcha').src='captcha/captcha.php?'+Math.random();
-		document.getElementById('captcha-form').focus();"
-									id="change-image">Not readable? Change text.</a><br /> <br /> <input
-									type="text" name="captcha" id="captcha-form" autocomplete="off" /><br />
+								document.getElementById('captcha').src='../captcha/captcha.php?'+Math.random();
+								document.getElementById('captcha-form').focus();"
+									id="change-image" style="cursor:pointer;text-decoration:none;color:#369;font-size:12px;">Not readable? Change text.</a><br /> <br /> <input
+									type="text" class="form" placeholder="Type the word in the above image" name="captcha" id="captcha-form" autocomplete="off" /><br />
 								</td>
-								<td style="color: red;"><?php echo $msg; ?></td>
+								</tr>
+								<tr>
+								<td style="color: red;width:300px;font-size:11px;"><?php echo $msg; ?></td>
 							</tr>
 						</table>
-					</fieldset>
-					<div style="margin-left: 100px;">
-						<input id="register" style="visibility: visible" name="memSubmit"
-							type="button" value="Register" onclick="processRegistration();" />
-						<input id="register" style="visibility: visible" name="cancel"
+					<div id="buttondiv"  align="center">
+						<input id="register" style="visibility: visible; width:120px;height:50px;" name="memSubmit"
+							type="submit" value="Register" />
+						<input id="register" style="visibility: visible;width:120px;height:50px;" name="cancel"
 							type="button" value="Cancel"
 							onclick="redirectToOpenCityLibraryListing()">
 					</div>
-
+				</fieldset>
+	<script type="text/javascript">
+ 	var frmvalidator  = new Validator("member");
+	frmvalidator.EnableOnPageErrorDisplay();
+	frmvalidator.EnableMsgsTogether();
+	frmvalidator.addValidation("fname","req","Please enter first name");
+	frmvalidator.addValidation("lname","req","Please enter last name");
+	frmvalidator.addValidation("phno", "req", "	*Please enter  your Phone Number");
+	frmvalidator.addValidation("preferredEmail", "email", "	*Please enter your Email properly");
+	frmvalidator.addValidation("preferredEmail", "req", "	*Please enter your Email.");
+	</script>
 				</form>
 				<br /> <br />
 			</div>
@@ -204,7 +222,7 @@ function processRegistration()	{
 		</div>
 	</div>
 	<div style="width: 1000px; margin-right: auto; margin-left: auto;">
-		<?php include("footer.php"); ?>
+		<?php include("../footer.php"); ?>
 	</div>
 </body>
 </html>

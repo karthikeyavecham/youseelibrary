@@ -15,6 +15,7 @@
 define("OBIB_ASSOC","1");
 define("OBIB_NUM","2");
 define("OBIB_BOTH","3");
+define("OBIB_LOCALE","en");
 
 /****************************************************************************
  * search types:
@@ -71,9 +72,9 @@ define("DB_TABLENAME_PREFIX", "");
  *********************************************************************************
  */
 define("OBIB_HOST",     "localhost");
-define("OBIB_DATABASE", "opencitylibrary");
-define("OBIB_USERNAME", "opencitylibrary");
-define("OBIB_PWD",      "opencitylibrary");
+define("OBIB_DATABASE", "peoples_library");
+define("OBIB_USERNAME", "root");
+define("OBIB_PWD",      "root");
 
 /*********************************************************************************
  *  /\                                                                      /\

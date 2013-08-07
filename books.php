@@ -44,22 +44,6 @@ $books=$bcq->getBooksByCriteria($author,$title,$category,$chosencity,$chosenloca
 
 
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-<style type="text/css">
-html {
-	height: 100%
-}
-
-body {
-	height: 100%;
-	margin: 0;
-	padding: 0
-}
-</style>
-</head>
-<body>
 	<div id="bookListing" style="width:800px; height: 500px">
 		<br />
 		<?php 
@@ -72,6 +56,7 @@ body {
 ?>
 
 		<table id="table-search" width="100%">
+		<tr><td colspan="100" style="background:#eee;color:#333;font-size:15px;text-align:center;font-weight:bold;">Books Listing</td></tr>
 			<tr style="background: #ccc">
 				<th>Category</th>
 				<th>Title</th>
@@ -91,7 +76,7 @@ body {
 				<td><?php echo $book["City"] ?>
 				</td>
 				<td><?php echo $book["Location"] ?></td>
-				<td><?php echo $book["Status"] ?></td>
+				<td style="color : <?php if($book["Status"]=="available") echo "green"; else echo "red"; ?>"><?php echo $book["Status"] ?></td>
 			</tr>
 			<?php }
 
@@ -117,7 +102,7 @@ body {
 						$queryVars .= "&author=".$author;
 						$queryVars .= "&title=".$title;
 						$queryVars .= "&category=".$category;
-						$queryVars .= "&locationid=".$chosenlocationid;
+						$queryVars .= "&location=".$searchlocation;
 
 						//type, author, title, category, location
 						$queryVars .= "&lat=".$_GET['lat'];
@@ -133,7 +118,7 @@ body {
 						$queryVars .= "&author=".$author;
 						$queryVars .= "&title=".$title;
 						$queryVars .= "&category=".$category;
-						$queryVars .= "&locationid=".$chosenlocationid;
+						$queryVars .= "&location=".$searchlocation;
 
 						//type, author, title, category
 						$queryVars .= "&lat=".$_GET['lat'];
@@ -143,11 +128,9 @@ body {
 					$queryVars .= "&numberofrecords=".$count;
 					break;
 				case 4:
-					if (isset($chosenlocationid) && $chosenlocationid !='') {
-						$queryVars .= "&locationid=".$chosenlocationid;
+						$queryVars .= "&location=".$chosenlocationid;
 						$queryVars .= "&lat=".$_GET['lat'];
 						$queryVars .= "&long=".$_GET['long'];
-					}
 					$queryVars .= "&condition=4";
 					$queryVars .= "&numberofrecords=".$count;
 					break;
@@ -157,7 +140,9 @@ body {
 					$queryVars .= "&author=".$author;
 					$queryVars .= "&title=".$title;
 					$queryVars .= "&category=".$category;
+					if(isset($_GET['lat']))
 					$queryVars .= "&lat=".$_GET['lat'];
+					if(isset($_GET['long']))
 					$queryVars .= "&long=".$_GET['long'];
 					$queryVars .= "&condition=5";
 					$queryVars .= "&numberofrecords=".$count;
@@ -170,7 +155,7 @@ body {
 						$queryVars .= "&author=".$author;
 						$queryVars .= "&title=".$title;
 						$queryVars .= "&category=".$category;
-						$queryVars .= "&locationid=".$chosenlocationid;
+						$queryVars .= "&location=".$searchlocation;
 						$queryVars .= "&lat=".$_GET['lat'];
 						$queryVars .= "&long=".$_GET['long'];
 					}
@@ -183,19 +168,11 @@ body {
 				<?php   			
 				$pagedResults->setLayout(new DoubleBarLayout());
 				echo $pagedResults->fetchPagedNavigation($queryVars);
-				
-				
-				
-}
 				?>
 			</tr>
-			<tr>
-				<br>
-				<br>
-			</tr>
 		</table>
+		<?php echo $pagedResults->fetchPagedNavigation($queryVars); }?>
+
 	</div>
-</body>
-</html>
 
 

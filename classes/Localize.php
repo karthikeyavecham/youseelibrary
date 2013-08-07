@@ -20,7 +20,7 @@ class Localize {
    ****************************************************************************
    */
   function Localize ($locale, $section) {
-    $localePath = "../locale/".$locale."/".$section.".php";
+    $localePath = "/locale/".$locale."/".$section.".php";
     include($localePath);
     $this->_trans = $trans;
     return true;

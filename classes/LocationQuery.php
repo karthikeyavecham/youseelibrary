@@ -39,12 +39,11 @@ class LocationQuery extends Query {
    * *
    * */
 	function getLocationsForCity($city){
-		$sql = $this->mkSQL("select locationid, loc_address_one, loc_address_two, loc_latitude, loc_longitude ,staffid 
-					 from biblio_location where loc_city = %Q ", $city);
+		$sql = $this->mkSQL("select locationid, loc_address_one, loc_address_two, loc_latitude, loc_longitude ,staffid , loc_days, loc_time from biblio_location where loc_city = %Q ", $city);
 		return array_map(array($this, '_mkObj'), $this->exec($sql));
 	}
 	function getLocationsInTheSameCityAs($locationid){
-		$sql = $this->mkSQL("select locationid, loc_address_one, loc_address_two, loc_latitude, loc_longitude ,staffid 
+		$sql = $this->mkSQL("select locationid, loc_address_one, loc_address_two, loc_latitude, loc_longitude ,staffid , loc_days, loc_time
 					 from biblio_location where loc_city = (select loc_city from biblio_location where locationid = %N) ", $locationid);
 		return array_map(array($this, '_mkObj'), $this->exec($sql));
 	}
@@ -138,80 +137,98 @@ class LocationQuery extends Query {
     # increment rowNmbr
     $this->_rowNmbr = $this->_rowNmbr + 1;
     $this->_currentRowNmbr = $this->_rowNmbr + (($this->_currentPageNmbr - 1) * $this->_itemsPerPage);
+	if(isset($array))
     return $this->_mkObj($array);
   }
   
   function _mkObj($array) {
-    $location = new Location();
+  $location = new Location();
+  if(isset($array["locationid"]))
     $location->setLocationid($array["locationid"]);
+  if(isset($array["loc_address_one"]))
 	$location->setAddressOne($array["loc_address_one"]);
+  if(isset($array["loc_address_two"]))
 	$location->setAddressTwo($array["loc_address_two"]);
+  if(isset($array["last_change_dt"]))
     $location->setLastChangeDt($array["last_change_dt"]);
+  if(isset($array["staffid"]))
     $location->setStaffid($array["staffid"]);
+  if(isset($array["last_change_userid"]))
     $location->setLastChangeUserid($array["last_change_userid"]);
     if (isset($array["username"])) {
       $location->setLastChangeUsername($array["username"]);
     }
+  if(isset($array["loc_pincode"]))
     $location->setPincode($array["loc_pincode"]);
+  if(isset($array["loc_city"]))
     $location->setCity($array["loc_city"]);
+  if(isset($array["loc_days"]))
+  	$location->setDays($array["loc_days"]);
+  if(isset($array["loc_time"]))
+  	$location->setTime($array["loc_time"]);
+  if(isset($array["loc_state"]))
     $location->setState($array["loc_state"]);
+  if(isset($array["loc_latitude"]))
     $location->setLatitude($array["loc_latitude"]);
+  if(isset($array["loc_longitude"]))
     $location->setLongitude($array["loc_longitude"]);
     
     
     return $location;
   }
   
-  /****************************************************************************
-   * Inserts a new library location into the member table.
-   * @param Member $mbr library member to insert
-   * @return integer the id number of the newly inserted member
-   * @access public
-   ****************************************************************************
-   */
-  function insert($location) {
-    $sql = $this->mkSQL("insert into biblio_location "
-                        . "(locationid, create_dt, last_change_dt, "
-                        . " last_change_userid, staffid, loc_address_one, loc_address_two, "
-                        . " loc_city, loc_state, loc_pincode,loc_latitude, loc_longitude) "
-                        . "values (null, sysdate(), sysdate(), %N, %N ,"
-                        . " %Q, %Q, %Q, %Q, %Q, %Q, %Q) ",
-                        $location->getLastChangeUserid(), $location->getStaffid(),
-                        $location->getAddressOne(), $location->getAddressTwo(),
-                        $location->getCity(),
-                        $location->getState(), $location->getPincode(),$location->getLatitude(), $location->getLongitude());
+	/****************************************************************************
+	* Inserts a new library location into the member table.
+	* @param Member $mbr library member to insert
+	* @return integer the id number of the newly inserted member
+	* @access public
+	****************************************************************************
+	*/
+	function insert($location) {
+		$sql = $this->mkSQL("insert into biblio_location "
+				. "(locationid, create_dt, last_change_dt, "
+				. " last_change_userid, staffid, loc_address_one, loc_address_two, "
+				. " loc_city, loc_state, loc_pincode,loc_latitude, loc_longitude, loc_days, loc_time ) "
+				. "values (null, sysdate(), sysdate(), %N, %N ,"
+				. " %Q, %Q, %Q, %Q, %Q, %Q, %Q, %Q, %Q) ",
+				$location->getLastChangeUserid(), $location->getStaffid(),
+				$location->getAddressOne(), $location->getAddressTwo(),
+				$location->getCity(),
+				$location->getState(), $location->getPincode(),$location->getLatitude(),
+				$location->getLongitude(), $location->getDays(), $location->getTime());
 
-    $this->exec($sql);
-    $locationid = $this->_conn->getInsertId();
-    return $locationid;
-    
-  }
+		$this->exec($sql);
+		$locationid = $this->_conn->getInsertId();
+		return $locationid;
 
-  /****************************************************************************
-   * Update a library member in the member table.
-   * @param Member $mbr library member to update
-   * @access public
-   ****************************************************************************
-   */
-  function update($location) {
-    $sql = $this->mkSQL("update biblio_location set "
-                        . " last_change_dt = sysdate(), last_change_userid=%N, staffid=%N ,"
-                        . " loc_address_one=%Q,  loc_address_two=%Q, "
-                        . " loc_city=%Q, loc_state=%Q, "
-                        . " loc_pincode=%Q, "
-    					. " loc_latitude=%Q, loc_longitude=%Q"
-                        . " where locationid=%N",
-                        $location->getLastChangeUserid(), $location->getStaffid(),
-                        $location->getAddressOne(), $location->getAddressTwo(),
-                        $location->getCity(),
-                        $location->getState(), $location->getPincode(),$location->getLatitude(), $location->getLongitude(),
-                        $location->getLocationid());
+	}
 
-    $this->exec($sql);
-    //$this->setCustomFields($mbr->getMbrid(), $mbr->_custom);
-  }
+	/****************************************************************************
+	 * Update a library member in the member table.
+	* @param Member $mbr library member to update
+	* @access public
+	****************************************************************************
+	*/
+	function update($location) {
+		$sql = $this->mkSQL("update biblio_location set "
+				. " last_change_dt = sysdate(), last_change_userid=%N, staffid=%N ,"
+				. " loc_address_one=%Q,  loc_address_two=%Q, "
+				. " loc_city=%Q, loc_state=%Q, "
+				. " loc_pincode=%Q, "
+				. " loc_latitude=%Q, loc_longitude=%Q, loc_days=%Q, loc_time=%Q"
+				. " where locationid=%N",
+				$location->getLastChangeUserid(), $location->getStaffid(),
+				$location->getAddressOne(), $location->getAddressTwo(),
+				$location->getCity(),
+				$location->getState(), $location->getPincode(),$location->getLatitude(), $location->getLongitude(),
+				$location->getDays(),$location->getTime(),
+				$location->getLocationid());
 
-  /****************************************************************************
+		$this->exec($sql);
+		//$this->setCustomFields($mbr->getMbrid(), $mbr->_custom);
+	}
+
+	/****************************************************************************
    * Deletes a library location from the member table.
    * @param string $mbrid Member id of library member to delete
    * @access public

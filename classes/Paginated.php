@@ -1,11 +1,11 @@
-<?
+<?php
 /**
  * The intention of the Paginated class is to manage the iteration of records
  * based on a specified page number usually addressed by a get parameter in the query string
  * and to use a layout interface to produce number pages based on the amount of elements
  */
 
-require_once "PageLayout.php";
+include "PageLayout.php";
 
 class Paginated {
 
@@ -99,6 +99,7 @@ class Paginated {
 		
 		$index = $this->getRowNumber();
 		$this->setRowNumber($this->getRowNumber() + 1);
+		if(isset($this->rs[$index]))
 		return $this->rs[$index];
 		
 	}

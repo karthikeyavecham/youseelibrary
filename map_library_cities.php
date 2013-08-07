@@ -1,14 +1,6 @@
-<!DOCTYPE html>
-<html>
-  <head>
-<link rel="stylesheet" type="text/css" href="css/main.css">
-<link rel="stylesheet" type="text/css" href="css/div.css">
-    <style type="text/css">
-html { height: 100% }
-body { height: 100%; margin: 0; padding: 0 }
-</style>
+
     <script type="text/javascript"
-      src="https://maps.googleapis.com/maps/api/js?&sensor=true">
+      src="https://maps.googleapis.com/maps/api/js?&sensor=true&region=IN">
     </script>
     <script type="text/javascript">
 
@@ -25,7 +17,7 @@ body { height: 100%; margin: 0; padding: 0 }
 				$points.=",";
 				$points.="5";
 				$points.=",";
-				$points.="'http://localhost/youseelibrary/our_library_cities.php?chosencity=";
+				$points.="'our_library_cities.php?chosencity=";
 				$points.=$city->getCityName();
 				$points.="&lat=";
 				$points.=$city->getLatitude();
@@ -69,22 +61,22 @@ function setMarkers(map, cities) {
     }
 }
 function initialize() {
+	// Create an array of styles.
+
 
     var myOptions = {
     center: new google.maps.LatLng(25.324167, 78.134766),
         zoom: 4,
-        mapTypeId: google.maps.MapTypeId.HYBRID
+   mapTypeControlOptions: {
+      mapTypeIds: [google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.TERRAIN, google.maps.MapTypeId.SATELLITE, google.maps.MapTypeId.HYBRID ]
+    }
     };
 	
     var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-    map.setOptions({draggable: false, zoomControl: false, scrollwheel: false, disableDoubleClickZoom: true});
+    map.setOptions({draggable: false, zoomControl: true, scrollwheel: false, disableDoubleClickZoom: true});
 
      setMarkers(map, points);
 }
         google.maps.event.addDomListener(window,'load',initialize);
 </script>
-</head>
-<body>
 	<div id="map_canvas" style="width:800px; height:500px"></div>
-</body>
-</html>

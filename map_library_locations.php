@@ -15,22 +15,8 @@ if ( isset($chosencity) && ($chosencity!= '') && ($chosencity!= ' '))	{
 }
 
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-<style type="text/css">
-html {
-	height: 100%
-}
-
-body {
-	height: 100%;
-	margin: 0;
-	padding: 0
-}
-</style>
 <script type="text/javascript"
-	src="https://maps.googleapis.com/maps/api/js?&sensor=true">
+	src="https://maps.googleapis.com/maps/api/js?&sensor=true&region=IN">
     </script>
 <script type="text/javascript">
 	var points = [
@@ -47,7 +33,7 @@ body {
 				$points.=",";
 				$points.="5";
 				$points.=",";
-				$points.="'http://localhost/youseelibrary/our_library_cities.php?locationid=";
+				$points.="'our_library_cities.php?locationid=";
 				$points.=$location->getLocationid();
 				$points.="&lat=";
 				$points.=$_GET['lat'];
@@ -59,6 +45,10 @@ body {
 				$points.=$staff->getContactNumber();
 				$points.="','";
 				$points.=$staff->getEmail();
+				$points.="','";
+				$points.=$location->getDays();
+				$points.="','";
+				$points.=$location->getTime();
 				$points.="'],";
 				}
 				$points=substr($points,0,-1);
@@ -83,7 +73,7 @@ body {
             map: map,
             icon: flag,
             shape: shape,
-            title: place[0] + "\n" + place[5] + "\n" + place[6] + "\n" + place[7],
+            title: "Address : "+place[0] + "\nLibrarian : " + place[5] + "\nMobile : " + place[6] + "\nEmail : " + place[7] + "\nDays Open : " + place[8] + "\nTimings : " +  place[9],
             zIndex: place[3],
             url: place[4]
         });
@@ -98,8 +88,9 @@ var long= <?php echo $_GET['long'];?>;
     var myOptions = {
     center: new google.maps.LatLng(lat,long),
         zoom: 10,
-        mapTypeId: google.maps.MapTypeId.HYBRID
-    };
+   mapTypeControlOptions: {
+      mapTypeIds: [google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.TERRAIN, google.maps.MapTypeId.SATELLITE, google.maps.MapTypeId.HYBRID ]
+    }    };
 
     var map = new google.maps.Map(document.getElementById("map_locations"), myOptions);
     map.setOptions({draggable: false, zoomControl: false, scrollwheel: false, disableDoubleClickZoom: true});
@@ -108,9 +99,4 @@ var long= <?php echo $_GET['long'];?>;
 }
         google.maps.event.addDomListener(window,'load',initialize);
 </script>
-</head>
-<body>
-
 	<div id="map_locations" style="width: 800px; height: 500px"></div>
-</body>
-</html>

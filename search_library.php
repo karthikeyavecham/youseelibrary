@@ -1,5 +1,3 @@
-<html>
-<head>
 <script type="text/javascript">
 function displayCategoryDiv() {
     var selectBox = document.getElementById("search_type");
@@ -27,8 +25,6 @@ function displayLocationDiv() {
 
    }
 </script>
-</head>
-<body>
 <form method="post" name="search_library" action="our_library_cities.php" >
 <div id="search_contents" class="cube-I">
 	<div id="search_by">
@@ -81,6 +77,5 @@ function displayLocationDiv() {
 	</br></br>
 	<input type="submit" name="Submit" value="Submit">
 </div>
+
 </form>
-</body>
-</html>

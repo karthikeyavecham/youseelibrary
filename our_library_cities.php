@@ -1,4 +1,6 @@
 <?php
+session_start();
+$thispage="more";
 require_once ("shared/global_constants.php");
 require_once ("classes/DmQuery.php");
 require_once ("classes/CityQuery.php");
@@ -12,8 +14,10 @@ $categories = $dmq->getAssoc ( "collection_dm" );
 
 // initialize these variables
 $chosencity = '';
+$chosenlocationid='';
 $searchlocation = '';
 $author = '';
+$search_type='';
 $title = '';
 $category = '';
 
@@ -37,6 +41,7 @@ if (isset ( $_GET ['page'] ) && $_GET ['page'] != '') {
 		$chosencity = $_GET ['chosencity'];
 		$lat = $_GET ['lat'];
 		$long = $_GET ['long'];
+				if(isset($_GET['locationid']))
 		$chosenlocationid = $_GET ['locationid'];
 	} else if ($condition == 3) {
 		
@@ -54,8 +59,7 @@ if (isset ( $_GET ['page'] ) && $_GET ['page'] != '') {
 		$lat = $_GET ['lat'];
 		$long = $_GET ['long'];
 	} else if ($condition == 4) {
-		
-		$chosenlocationid = $_GET ['locationid'];
+		$chosenlocationid = $_GET['location'];
 		$chosencity = $cityq->getCityOfLocation ( $chosenlocationid );
 	} else if ($condition == 5) {
 		
@@ -119,19 +123,23 @@ else if (isset ( $_GET ['locationid'] ) && $_GET ['locationid'] != '') {
 <META NAME="Description"
 	CONTENT="UC is an exchange platform to channel Philanthropic Resources to Education, Health and Environmental services sectors, in order to improve access to these services especially for the poor. These sectors need a much larger infusion of capital of various kinds including Financial, Intellectual and Social Capital.">
 <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
-<link rel="stylesheet" type="text/css" href="css/main.css">
-<link rel="stylesheet" type="text/css" href="css/div.css">
-<link href="css/table.css" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" type="text/css" href="test/test.css">
-<link rel="stylesheet" type="text/css" href="css/tabs.css">
-<link rel="stylesheet" type="text/css" href="css/opencity.css">
-<link rel="stylesheet" href="scripts/jquery-ui.css">
-<script src="scripts/jquery-1.8.3.js"></script>
-<script src="scripts/jquery.ui.core.js"></script>
-<script src="scripts/jquery.ui.widget.js"></script>
-<script src="scripts/datepicker_ngo.js"></script>
-<script type="text/javascript" src="scripts/custom_jquery.js"></script>
-<link rel="stylesheet" href="css/slideshow.css">
+<link rel="stylesheet" type="text/css" href="../css/main.css">
+<link rel="stylesheet" type="text/css" href="../css/div.css">
+<link rel="stylesheet" type="text/css" href="../css/opencity.css">
+<link rel="stylesheet" href="../scripts/jquery-ui.css">
+<script src="../scripts/jquery.min.js"></script>
+<style type="text/css">
+div.button{
+padding:10px;font-size:13px;font-weight:bold;text-align:center;border:1px solid #333; 
+border-radius:1em;background-color:rgba(194,194,194,0.1);transition:background-color 1s;
+position:relative;
+margin-bottom:20px;
+}
+div.button:hover{
+	background-color:rgba(194,194,194,0.5);
+}
+</style>
+
 </HEAD>
 <BODY>
 
@@ -139,44 +147,41 @@ else if (isset ( $_GET ['locationid'] ) && $_GET ['locationid'] != '') {
 	<div id="wrapper">
 
 		<!--header and navbar -->
-		<?php include 'header_navbar.php';?>
+		<?php include '../header_navbar.php';?>
 		<!--maincontentarea begin-->
-		<div id="uccertificate-main">
-			<table>
+		<div id="content-main">
+			<table style="margin-bottom:80px;">
 				<tr>
 					<td colspan="4">
-						<div id="rightp" style="float: left"></div>
 					</td>
 				</tr>
 				<tr>
 					<td valign="top">
-						<div class="container">
 							<?php include 'search_library.php';?>
-							<div class="cube-II">
-								<div>
-									<br> <br> <a href="opencityregistration.php"><font
-										color="#0B3861"> <?php echo "Register to become a Member of the Library.";?>
-									</font></a>
-								</div>
-								<div align="justify">
-									<br> <br> <font color="#0B3861"><center><?php echo "OR";?> </center>
-									</font>
-								</div>
-								<div align="justify">
-									<br> <br> <font color="#0B3861"><?php echo "Contact the librarian at your chosen location to start using the library.";?> 
-									</font>
-								</div>
-							</div>
+						<div class="button">
+						 <a style="color:black;text-decoration:none;" href="opencityregistration.php"><font
+						color="#369"> <?php echo "Get Membership!";?>
+						</font></a>
+						</div>
+						<div class="button">
+						<span class="tooltip">
+						 <a> <?php echo "Start a Peoples Library";?>
+						<span>
+						To start a Peoples Library in your community, you can contact us at<br />Email : contact@yousee.in<br />Phone : +91-8008-884422 </span></a>
+						</span>
 						</div>
 					</td>
-					<td valign="top">
-						<hr> <?php
+				<td valign="top"><?php
 						// when a city is clicked upon in the map, display the locations of the city that have a open library
 						if ($condition == 1 || $condition == 2 || $condition == 3 || $condition == 4) {
 							?>
 						<div align="justify">
 							 <br> 
-							 <font style='color:#0B3861;font-weight:bold;font-size:16px;'><?php echo "To browse books in the Library click on any of the locations shown below or use the search bar on the left for advanced search.";?>
+							 <font style="font-size:15px;color:#369;font-weight:bold;font-family:Trebuchet MS;">Peoples Library</font>
+							 <p style="color:#666;font-size:12px;font-family:Trebuchet MS;"><b>Peoples Library</b> is an attempt to bring libraries closer to people and in the process bring the community together. The way it works is as follows.
+							 Donated books have been selected by volunteers to start a library at a location of their choice; residents of the community can borrow books from these libraries at specified times scheduled by the volunteer librarian.
+							 Books are tracked by the librarian using an open source online library management system customized by UC volunteers.<br /><br />
+							 <font style='color:#666;font-weight:normal;font-size:12px;'>To browse books in the Library click on any of the locations shown in the map below or use the search bar on the left for advanced search.
 							</font><br><br> 
 						</div>
 						<div id="mapLocations">
@@ -188,7 +193,11 @@ else if (isset ( $_GET ['locationid'] ) && $_GET ['locationid'] != '') {
 							?>
 						<div align="justify">
 							 <br> 
-							 <font style='color:#0B3861;font-weight:bold;font-size:16px;'><?php echo "To get a list of Library Locations click on a city shown in the map below or use the search bar on the left for advanced search.";?> <br>
+							 <font style="font-size:15px;color:#369;font-weight:bold;font-family:Trebuchet MS;">Peoples Library</font>
+							 <p style="color:#666;font-size:12px;font-family:Trebuchet MS;"><b>Peoples Library</b> is an attempt to bring libraries closer to people and in the process bring the community together. The way it works is as follows.
+							 Donated books have been selected by volunteers to start a library at a location of their choice; residents of the community can borrow books from these libraries at specified times scheduled by the volunteer librarian.
+							 Books are tracked by the librarian using an open source online library management system customized by UC volunteers.<br /><br />
+							 <font style='color:#666;font-weight:normal;font-size:12px;'>Click on any of the cities shown in the map below to get a list of Library locations and a listing of books in that city. You can also use the search bar on the left for advanced search.
 							</font><br><br> 
 						</div>
 							<div id="mapCitiesWithBooks">
@@ -206,7 +215,7 @@ else if (isset ( $_GET ['locationid'] ) && $_GET ['locationid'] != '') {
 						</div> <?php
 						}
 						?>
-						<div id="ListingBooksForClick">
+						<div  id="ListingBooksForClick">
 							<?php
 							include 'books.php';
 							?>
@@ -214,14 +223,13 @@ else if (isset ( $_GET ['locationid'] ) && $_GET ['locationid'] != '') {
 					</td>
 				</tr>
 			</table>
+			</div>
+			<?php  include '../footer.php' ;?>
+
+</div>
 			<!--maincontentarea end-->
-
 			<!--footer-->
-			<?php  include 'footer.php' ;?>
-
-		</div>
 		<!--UC Certificate end-->
-	</div>
 	<!--wrapper end-->
 
 </BODY>

@@ -39,7 +39,7 @@ class CityQuery extends Query {
    * *
    * */
 	function getCities(){
-		$sql = $this->mkSQL("select * from biblio_city");
+		$sql = $this->mkSQL("select * from biblio_city where city_name IN (select distinct loc_city from biblio_location)");
 		return array_map(array($this, '_mkObj'), $this->exec($sql));
 	}
   

@@ -10,7 +10,7 @@
 			<option value='' select="selected">--ALL--</option>
 <?php
  foreach ($locations as $l) { 
-				echo '<option value="'.$l->getLocationid().'" name="'.$l->getAddressOne().'">'.$l->getAddressOne().'</option>';
+				echo '<option value="'.$l->getLocationid().'">'.$l->getAddressOne()." ".$l->getAddressTwo().'</option>';
 			    }
 ?>
 		</select>
